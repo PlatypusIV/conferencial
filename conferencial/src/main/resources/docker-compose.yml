@@ -15,17 +15,17 @@ services:
     #      size: 134217728 # 128*2^20 bytes = 128Mb
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: TemporaryPassword
+      POSTGRES_PASSWORD: temporary
       POSTGRES_DB: conference_db
     ports:
-      - "5432:9888"
+      - "9888:5432"
 
   pgadmin:
     container_name: pgadmin4_container
-    image: dpage4/pgadmin4
+    image: dpage/pgadmin4
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: AdminPassword
     ports:
-      - "5050:9889"
+      - "9889:80"
