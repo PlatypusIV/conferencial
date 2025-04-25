@@ -1,4 +1,4 @@
-CREATE TABLE public.room(
+CREATE TABLE room(
     id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     location VARCHAR(150) NOT NULL,

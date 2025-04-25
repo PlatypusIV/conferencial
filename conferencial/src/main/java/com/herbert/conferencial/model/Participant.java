@@ -5,16 +5,15 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "room")
-public class Room {
+@Table(name = "participant")
+public class Participant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;
+    @Column(name = "full_name")
+    private String fullName;
 
-    private String location;
-
-    @Column(name = "max_seats")
-    private int maxSeats;
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 }

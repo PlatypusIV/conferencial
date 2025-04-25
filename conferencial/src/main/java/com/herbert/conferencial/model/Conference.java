@@ -1,17 +1,21 @@
 package com.herbert.conferencial.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
-//@Entity
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "conference")
 public class Conference {
 
-//    @Id
-//    @GeneratedValue
-//    private Long id;
-//
-//    private String firstName;
-//
-//    private String lastName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    private String name;
+
+    @Column(name= "date_time")
+    private LocalDateTime dateTime;
+
+    private int location;
 }
