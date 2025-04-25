@@ -14,8 +14,16 @@ public class Conference {
 
     private String name;
 
-    @Column(name= "date_time")
+    @Column(name = "date_time")
     private LocalDateTime dateTime;
 
     private int location;
+
+    protected Conference() {
+    }
+
+    public Conference(String name, LocalDateTime dateTime) {
+        this.name = name;
+        this.dateTime = dateTime;
+    }
 }
