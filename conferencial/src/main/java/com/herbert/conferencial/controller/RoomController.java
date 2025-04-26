@@ -2,31 +2,47 @@ package com.herbert.conferencial.controller;
 
 import com.herbert.conferencial.model.Room;
 import com.herbert.conferencial.service.RoomService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/rooms")
 public class RoomController {
 
-    RoomService roomService;
+    private final RoomService roomService;
+
+    @Autowired
+    public RoomController(RoomService roomService) {
+        this.roomService = roomService;
+    }
+
     //add room
-    @PostMapping(path = "/rooms")
-    private Room addRoom(@RequestBody Room room){
+    @PostMapping(path = "/")
+    private Room addRoom(@RequestBody Room room) {
         return roomService.addNewRoom(room);
     }
 
     //remove room
-    @DeleteMapping(path = "/rooms/{roomId}")
-    private ResponseEntity<String> removeRoom(@PathVariable("roomId") int roomId){
+    @DeleteMapping(path = "/{roomId}")
+    private ResponseEntity<String> removeRoom(@PathVariable("roomId") int roomId) {
         return new ResponseEntity<>("Temporary delete message", HttpStatus.NO_CONTENT);
     }
 
     //get all rooms
-    @GetMapping(path = "/rooms")
-    public List<Room> getAllRooms(){
-        return roomService.getAllRooms();
+    @GetMapping(path = "/")
+    public ResponseEntity<List<Room>> getAllRooms() {
+        List<Room> rooms = roomService.getAllRooms();
+        return ResponseEntity.ok(rooms);
+    }
+
+    @GetMapping(path = "{roomId}")
+    public ResponseEntity<Room> getRoomById(@PathVariable("roomId") int roomId) {
+        Room room = roomService.getRoomById(roomId);
+        return ResponseEntity.ok(room);
     }
 
     //get available rooms by time

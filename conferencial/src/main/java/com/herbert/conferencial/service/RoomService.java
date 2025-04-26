@@ -2,6 +2,7 @@ package com.herbert.conferencial.service;
 
 import com.herbert.conferencial.model.Room;
 import com.herbert.conferencial.repository.RoomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,13 +10,22 @@ import java.util.List;
 @Service
 public class RoomService {
 
-    RoomRepository roomRepository;
+    private final RoomRepository roomRepository;
 
-    public List<Room> getAllRooms(){
+    @Autowired
+    public RoomService(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
+    }
+
+    public List<Room> getAllRooms() {
         return roomRepository.findAll();
     }
 
-    public Room addNewRoom(Room newRoom){
+    public Room addNewRoom(Room newRoom) {
         return roomRepository.save(newRoom);
+    }
+
+    public Room getRoomById(int roomId) {
+        return roomRepository.findById(roomId);
     }
 }
