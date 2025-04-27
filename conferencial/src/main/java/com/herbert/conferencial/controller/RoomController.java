@@ -3,6 +3,8 @@ package com.herbert.conferencial.controller;
 import com.herbert.conferencial.model.Room;
 import com.herbert.conferencial.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +24,7 @@ public class RoomController {
 
     //add room
     @PostMapping(path = "/")
-    private Room addRoom(@RequestBody Room room) {
+    private Room addNewRoom(@RequestBody Room room) {
         return roomService.addNewRoom(room);
     }
 
@@ -34,8 +36,8 @@ public class RoomController {
 
     //get all rooms
     @GetMapping(path = "/")
-    public ResponseEntity<List<Room>> getAllRooms() {
-        List<Room> rooms = roomService.getAllRooms();
+    public ResponseEntity<Page<Room>> getAllRooms(Pageable page) {
+        Page<Room> rooms = roomService.getRooms(page);
         return ResponseEntity.ok(rooms);
     }
 

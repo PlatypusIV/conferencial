@@ -3,7 +3,10 @@ package com.herbert.conferencial.service;
 import com.herbert.conferencial.model.Room;
 import com.herbert.conferencial.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
@@ -17,8 +20,8 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public List<Room> getAllRooms() {
-        return roomRepository.findAll();
+    public Page<Room> getRooms(Pageable pageable) {
+        return roomRepository.findAll(pageable);
     }
 
     public Room addNewRoom(Room newRoom) {
