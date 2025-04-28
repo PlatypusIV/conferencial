@@ -6,9 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Integer> {
-    Page<Participant> findAllParticipants(Pageable page);
-    Participant findParticipantById(long id);
-
-
+//    Page<Participant> findAllParticipants(Pageable page);
+//    Participant findParticipantById(long id);
 
 }

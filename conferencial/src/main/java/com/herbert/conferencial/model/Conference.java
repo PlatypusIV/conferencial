@@ -1,12 +1,20 @@
 package com.herbert.conferencial.model;
 
-import jakarta.persistence.*;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "conference")
 @Table(name = "conference")
 public class Conference {
 
@@ -21,8 +29,10 @@ public class Conference {
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 
+    @Nullable
+    @JoinColumn(name= "id", nullable = true)
     @Getter @Setter
-    private int location;
+    private int roomId;
 
     protected Conference() {
     }
