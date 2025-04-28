@@ -31,13 +31,15 @@ public class RoomController {
     //remove room
     @DeleteMapping(path = "/{roomId}")
     private ResponseEntity<String> removeRoom(@PathVariable("roomId") int roomId) {
-        return new ResponseEntity<>("Temporary delete message", HttpStatus.NO_CONTENT);
+        return (roomService.deleteRoomById(roomId))
+                ? new ResponseEntity<>("Deleted successfully", HttpStatus.NO_CONTENT)
+                : new ResponseEntity<>("Room not found", HttpStatus.NOT_FOUND);
     }
 
     //get all rooms
     @GetMapping(path = "/")
-    public ResponseEntity<Page<Room>> getAllRooms(Pageable page) {
-        Page<Room> rooms = roomService.getRooms(page);
+    public ResponseEntity<List<Room>> getAllRooms(Pageable page) {
+        List<Room> rooms = roomService.getRooms();
         return ResponseEntity.ok(rooms);
     }
 

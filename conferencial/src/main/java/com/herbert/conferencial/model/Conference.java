@@ -29,10 +29,13 @@ public class Conference {
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 
-    @Nullable
     @JoinColumn(name= "id", nullable = true)
     @Getter @Setter
     private int roomId;
+
+    @Getter @Setter
+    @Column(name = "is_canceled")
+    private boolean isCanceled;
 
     protected Conference() {
     }

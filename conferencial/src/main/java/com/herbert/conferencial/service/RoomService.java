@@ -20,8 +20,8 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public Page<Room> getRooms(Pageable pageable) {
-        return roomRepository.findAll(pageable);
+    public List<Room> getRooms() {
+        return roomRepository.findAll();
     }
 
     public Room addNewRoom(Room newRoom) {
@@ -31,4 +31,17 @@ public class RoomService {
     public Room getRoomById(int roomId) {
         return roomRepository.findById(roomId);
     }
+
+    public boolean deleteRoomById(int id) {
+        if(roomRepository.existsById(id)){
+            roomRepository.deleteById(id);
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    //get available rooms in between timerange
+
+
 }

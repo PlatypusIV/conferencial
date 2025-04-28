@@ -9,6 +9,7 @@ CREATE TABLE conference(
     id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     date_time TIMESTAMP NOT NULL,
+    is_canceled BIT NOT NULL,
     room_id INT REFERENCES room (id)
 );
 

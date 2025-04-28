@@ -3,7 +3,6 @@ package com.herbert.conferencial.controller;
 import com.herbert.conferencial.model.Conference;
 import com.herbert.conferencial.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +20,8 @@ public class ConferenceController {
     }
 
     @GetMapping(path = "/")
-    public ResponseEntity<List<Conference>> getAllConferences(Pageable page) {
-        var conferenceList = conferenceService.getAllConferences(page).toList();
+    public ResponseEntity<List<Conference>> getAllConferences() {
+        var conferenceList = conferenceService.getAllConferences();
         return ResponseEntity.ok(conferenceList);
     }
 
@@ -37,4 +36,9 @@ public class ConferenceController {
         Conference conference = conferenceService.findConferenceById(id);
         return ResponseEntity.ok(conference);
     }
+
+//    @PatchMapping(path = "/cancel")
+//    public ResponseEntity<Conference> cancelConference(@PathVariable("id") int id){
+//
+//    }
 }
