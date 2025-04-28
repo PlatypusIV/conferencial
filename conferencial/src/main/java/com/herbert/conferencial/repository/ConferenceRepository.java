@@ -16,6 +16,6 @@ public interface ConferenceRepository extends JpaRepository<Conference, Integer>
 
     List<Conference> findByRoomId(int room_id);
 
-    @Query("")
-    Conference setConferenceToCanceled(int id);
+//    @Query("UPDATE conference c SET c.is_canceled = :isCanceled WHERE c.id = :id")
+//    Conference setConferenceToCanceled(int id, boolean isCanceled);
 }
