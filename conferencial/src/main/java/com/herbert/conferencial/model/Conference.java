@@ -1,6 +1,5 @@
 package com.herbert.conferencial.model;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
@@ -26,8 +25,12 @@ public class Conference {
     private String name;
 
     @Getter @Setter
-    @Column(name = "date_time")
-    private LocalDateTime dateTime;
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
+
+    @Getter @Setter
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
 
     @JoinColumn(name= "id", nullable = true)
     @Getter @Setter
@@ -40,8 +43,11 @@ public class Conference {
     protected Conference() {
     }
 
-    public Conference(String name, LocalDateTime dateTime) {
+    public Conference(String name, LocalDateTime startTime, LocalDateTime endTime, int roomId, boolean isCanceled) {
         this.name = name;
-        this.dateTime = dateTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.roomId = roomId;
+        this.isCanceled = isCanceled();
     }
 }

@@ -8,7 +8,8 @@ CREATE TABLE room(
 CREATE TABLE conference(
     id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
-    date_time TIMESTAMP NOT NULL,
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP NOT NULL,
     is_canceled BOOLEAN,
     room_id INT REFERENCES room (id)
 );

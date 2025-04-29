@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Getter
 @Entity
 @Table(name = "room")
 @NoArgsConstructor
@@ -15,16 +16,15 @@ import java.time.LocalDate;
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private int id;
 
-    @Getter @Setter
+    @Setter
     private String name;
 
-    @Getter @Setter
+    @Setter
     private String location;
 
     @Column(name = "max_seats")
-    @Getter @Setter
+    @Setter
     private int maxSeats;
 }

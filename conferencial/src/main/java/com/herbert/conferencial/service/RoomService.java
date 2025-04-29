@@ -32,7 +32,7 @@ public class RoomService {
         return roomRepository.findById(roomId);
     }
 
-    public boolean deleteRoomById(int id) {
+    public boolean deleteRoomById(long id) {
         if(roomRepository.existsById(id)){
             roomRepository.deleteById(id);
             return true;
