@@ -32,15 +32,15 @@ public class Conference {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    @JoinColumn(name= "id", nullable = true)
     @Getter @Setter
+    @JoinColumn(name= "id", nullable = true)
     private int roomId;
 
     @Getter @Setter
     @Column(name = "is_canceled")
     private boolean isCanceled;
 
-    protected Conference() {
+    public Conference() {
     }
 
     public Conference(String name, LocalDateTime startTime, LocalDateTime endTime, int roomId, boolean isCanceled) {
