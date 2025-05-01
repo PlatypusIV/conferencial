@@ -48,6 +48,6 @@ public class Conference {
         this.startTime = startTime;
         this.endTime = endTime;
         this.roomId = roomId;
-        this.isCanceled = isCanceled();
+        this.isCanceled = isCanceled;
     }
 }

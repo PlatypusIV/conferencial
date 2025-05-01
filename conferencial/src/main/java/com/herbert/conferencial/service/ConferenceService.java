@@ -24,10 +24,13 @@ public class ConferenceService {
         return conferenceRepository.findAll();
     }
 
-    public Conference addNewConference(Conference conference){
+    public boolean addNewConference(Conference conference){
 
-        boolean test = validateConference(conference);
-        return conferenceRepository.save(conference);
+        boolean isValidConference = validateConference(conference);
+        if(isValidConference) {
+            conferenceRepository.save(conference);
+        }
+        return isValidConference;
     }
 
     public Conference findConferenceById(int id){
@@ -42,12 +45,22 @@ public class ConferenceService {
 
         List<Conference> conferencesHappeningThatDay = conferenceRepository.getConferencesInTimeRange(startOfDay, endOfDay);
 
+
         boolean isInvalidName = conferencesHappeningThatDay.stream().anyMatch(c->
                 c.getName().equals(conference.getName()));
 
+        boolean isInvalidRoomId = validateRoomOccupation(conferencesHappeningThatDay.stream().filter(c -> c.getRoomId()== conference.getRoomId() && !c.isCanceled()).toList(), conference);
 
-        boolean isInvalidRoomId = conferencesHappeningThatDay.stream().anyMatch(c -> c.getRoomId() == conference.getRoomId());
+        return !isInvalidName && !isInvalidRoomId;
+    }
 
-        return !isInvalidRoomId && !isInvalidName;
+    private boolean validateRoomOccupation(List<Conference> conferencesToCompareTo, Conference conferenceInComparison){
+        boolean isInvalidStartTime = conferencesToCompareTo.stream().anyMatch(c -> (c.getStartTime().isBefore(conferenceInComparison.getStartTime()) || c.getStartTime().equals(conferenceInComparison.getStartTime())) && c.getEndTime().isAfter(conferenceInComparison.getStartTime()));
+
+        boolean isInvalidEndTime = conferencesToCompareTo.stream().anyMatch(c -> (c.getEndTime().isAfter(conferenceInComparison.getEndTime()) || c.getEndTime().equals(conferenceInComparison.getEndTime())) && c.getStartTime().isBefore(conferenceInComparison.getEndTime()));
+
+        boolean areBothEndAndStartTimeInvalid = conferencesToCompareTo.stream().anyMatch(c-> conferenceInComparison.getStartTime().isBefore(c.getStartTime()) && conferenceInComparison.getEndTime().isAfter(c.getEndTime()));
+
+        return isInvalidStartTime && isInvalidEndTime && areBothEndAndStartTimeInvalid;
     }
 }

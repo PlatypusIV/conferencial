@@ -3,6 +3,7 @@ package com.herbert.conferencial.controller;
 import com.herbert.conferencial.model.Conference;
 import com.herbert.conferencial.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +27,10 @@ public class ConferenceController {
     }
 
     @PostMapping(path = "/")
-    public ResponseEntity<Conference> addNewConference(@RequestBody Conference conference){
-        var newlyCreatedConference = conferenceService.addNewConference(conference);
-        return ResponseEntity.ok(newlyCreatedConference);
+    public ResponseEntity<?> addNewConference(@RequestBody Conference conference){
+        boolean result = conferenceService.addNewConference(conference);
+        if(result) return new ResponseEntity<>("Created", HttpStatus.OK);
+        return new ResponseEntity<>("Bad Request", HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @GetMapping(path = "/{id}")

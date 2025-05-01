@@ -20,4 +20,6 @@ public class Participant {
     @Getter @Setter
     @Column(name = "birth_date")
     private LocalDate birthDate;
+
+
 }
