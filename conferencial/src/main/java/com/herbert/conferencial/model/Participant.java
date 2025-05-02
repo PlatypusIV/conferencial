@@ -21,5 +21,7 @@ public class Participant {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-
+    @Getter @Setter
+    @Column(name = "conference_id")
+    private int conferenceId;
 }
