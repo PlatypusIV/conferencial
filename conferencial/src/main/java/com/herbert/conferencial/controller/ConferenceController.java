@@ -39,8 +39,10 @@ public class ConferenceController {
         return ResponseEntity.ok(conference);
     }
 
-//    @PatchMapping(path = "/cancel")
-//    public ResponseEntity<Conference> cancelConference(@PathVariable("id") int id){
-//
-//    }
+    @PatchMapping(path = "/cancel")
+    public ResponseEntity<?> cancelConference(@RequestBody int id){
+        boolean result = conferenceService.cancelOrUnCancelConference(id);
+        if(result) return new ResponseEntity<>("Canceled", HttpStatus.OK);
+        return new ResponseEntity<>("Incorrect input", HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }

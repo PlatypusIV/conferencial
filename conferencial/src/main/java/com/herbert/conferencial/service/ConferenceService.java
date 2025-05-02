@@ -37,6 +37,11 @@ public class ConferenceService {
         return conferenceRepository.findById(id);
     }
 
+    public boolean cancelOrUnCancelConference(int id) {
+        Conference alteredConference = conferenceRepository.setConferenceToCanceled(id);
+        return !alteredConference.getName().isEmpty();
+    }
+
     private boolean validateConference(Conference conference) {
         LocalDate localDate = LocalDate.parse(conference.getStartTime().toLocalDate().toString());
 

@@ -14,8 +14,8 @@ public interface ConferenceRepository extends JpaRepository<Conference, Integer>
 //    @Query(value= "SELECT id FROM conference WHERE id = :id")
     Conference findById(@Param("id")int id);
 
-//    @Query("UPDATE conference c SET c.is_canceled = :isCanceled WHERE c.id = :id")
-//    Conference setConferenceToCanceled(int id, boolean isCanceled);
+    @Query("UPDATE conference c SET c.isCanceled = NOT c.isCanceled WHERE c.id = :id")
+    Conference setConferenceToCanceled(int id);
 
     @Query(value = "SELECT c" +
             " FROM conference c" +
