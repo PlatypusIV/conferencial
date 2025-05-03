@@ -3,11 +3,9 @@ package com.herbert.conferencial.controller;
 import com.herbert.conferencial.model.Participant;
 import com.herbert.conferencial.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,4 +25,13 @@ public class ParticipantController {
         List<Participant> conferenceParticipants = participantService.getParticipantsRelatedToConference(conferenceId);
         return ResponseEntity.ok(conferenceParticipants);
     }
+
+    @PostMapping(path = "/")
+    public ResponseEntity<?> addNewParticipant(@RequestBody Participant participant){
+        boolean isValidParticipant = participantService.addNewParticipant(participant);
+        if(isValidParticipant) return new ResponseEntity<>("Created", HttpStatus.CREATED);
+        return new ResponseEntity<>("Incorrect participant", HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+
 }

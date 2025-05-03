@@ -56,7 +56,9 @@ public class ConferenceService {
 
         boolean isInvalidRoomId = validateRoomOccupation(conferencesHappeningThatDay.stream().filter(c -> c.getRoomId()== conference.getRoomId() && !c.isCanceled()).toList(), conference);
 
-        return !isInvalidName && !isInvalidRoomId;
+        boolean isAtleastDayInAdvance = conference.getStartTime().isAfter(LocalDateTime.now().minusDays(1));
+
+        return !isInvalidName && !isInvalidRoomId && isAtleastDayInAdvance;
     }
 
     private boolean validateRoomOccupation(List<Conference> conferencesToCompareTo, Conference conferenceInComparison){

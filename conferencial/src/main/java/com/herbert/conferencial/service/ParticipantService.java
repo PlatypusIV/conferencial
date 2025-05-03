@@ -26,6 +26,7 @@ public class ParticipantService {
     public boolean addNewParticipant(Participant participant) {
         boolean isAdult = validateParticipantAge(participant);
         boolean isUniqueInConference = validateRepeatingParticipants(participant);
+//        boolean isMaximumParticipantCountReached =
         if(isAdult && isUniqueInConference) {
             participantRepository.save(participant);
             return true;
