@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ConferenceRepository extends JpaRepository<Conference, Integer> {
-    List<Conference> findAll();
-
-//    @Query(value= "SELECT id FROM conference WHERE id = :id")
+    @Query(value= "SELECT c FROM conference c WHERE id = :id")
     Conference findById(@Param("id")int id);
 
     @Query("UPDATE conference c SET c.isCanceled = NOT c.isCanceled WHERE c.id = :id")

@@ -1,21 +1,29 @@
 package com.herbert.conferencial.service;
 
+import com.herbert.conferencial.errorHandling.GeneralException;
 import com.herbert.conferencial.model.Participant;
+import com.herbert.conferencial.repository.ConferenceRepository;
 import com.herbert.conferencial.repository.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.ChronoField;
 import java.util.List;
 
 @Service
 public class ParticipantService {
+
+    private final ConferenceService conferenceService;
+
+    private final RoomService roomService;
+
     private final ParticipantRepository participantRepository;
 
     @Autowired
-    public ParticipantService(ParticipantRepository participantRepository) {
+    public ParticipantService(ConferenceService conferenceService, RoomService roomService, ParticipantRepository participantRepository) {
+        this.conferenceService = conferenceService;
+        this.roomService = roomService;
         this.participantRepository = participantRepository;
     }
 
@@ -23,25 +31,37 @@ public class ParticipantService {
         return participantRepository.findAllParticipantsByConferenceId(conferenceId);
     }
 
-    public boolean addNewParticipant(Participant participant) {
-        boolean isAdult = validateParticipantAge(participant);
-        boolean isUniqueInConference = validateRepeatingParticipants(participant);
-//        boolean isMaximumParticipantCountReached =
-        if(isAdult && isUniqueInConference) {
-            participantRepository.save(participant);
-            return true;
+    public Participant addNewParticipant(Participant participant) {
+        validateParticipantAge(participant);
+        validateRepeatingParticipants(participant);
+        validateAmountOfParticipants(participant.getConferenceId());
+        return participantRepository.save(participant);
+    }
+
+    public void validateParticipantAge(Participant participant) {
+        if(!(Period.between(participant.getBirthDate(), LocalDate.now()).getYears() >= 18)){
+            throw new GeneralException("Participant is not an adult");
         }
-        return false;
     }
 
-    public boolean validateParticipantAge(Participant participant) {
-        return Period.between(participant.getBirthDate(), LocalDate.now()).getYears() >= 18;
-    }
-
-    public boolean validateRepeatingParticipants(Participant participant) {
+    public void validateRepeatingParticipants(Participant participant) {
         List<Participant> participantsOfConference = participantRepository.findAllParticipantsByConferenceId(participant.getConferenceId());
+        if((participantsOfConference.stream().noneMatch(p -> p.getFullName().equals(participant.getFullName()) && p.getBirthDate().equals(participant.getBirthDate())))){
+            throw new GeneralException("Participant is already taking part of conference");
+        }
+    }
 
-        return participantsOfConference.stream().noneMatch(p -> p.getFullName().equals(participant.getFullName()) && p.getBirthDate().equals(participant.getBirthDate()));
+    public void validateAmountOfParticipants(int conferenceId){
+
+        int amountOfParticipants = participantRepository.findAmountOfParticipantsInConference(conferenceId);
+
+        int roomId = conferenceService.findConferenceById(conferenceId).getRoomId();
+
+        int roomMaxSeats = roomService.getRoomById(roomId).getMaxSeats();
+
+        if(amountOfParticipants>= roomMaxSeats){
+            throw new GeneralException("Too many participants in conference");
+        }
     }
 
 }

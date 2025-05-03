@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Entity
+@Entity(name= "participant")
 @Table(name = "participant")
 public class Participant {
     @Id

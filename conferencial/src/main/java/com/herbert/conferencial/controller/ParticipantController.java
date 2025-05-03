@@ -28,9 +28,8 @@ public class ParticipantController {
 
     @PostMapping(path = "/")
     public ResponseEntity<?> addNewParticipant(@RequestBody Participant participant){
-        boolean isValidParticipant = participantService.addNewParticipant(participant);
-        if(isValidParticipant) return new ResponseEntity<>("Created", HttpStatus.CREATED);
-        return new ResponseEntity<>("Incorrect participant", HttpStatus.UNPROCESSABLE_ENTITY);
+        Participant participant1 = participantService.addNewParticipant(participant);
+        return new ResponseEntity<>("Created", HttpStatus.CREATED);
     }
 
 
