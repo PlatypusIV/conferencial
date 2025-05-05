@@ -1,11 +1,8 @@
 package com.herbert.conferencial.service;
 
+import com.herbert.conferencial.errorHandling.GeneralException;
 import com.herbert.conferencial.model.Conference;
-import com.herbert.conferencial.model.Room;
 import com.herbert.conferencial.repository.ConferenceRepository;
-import com.herbert.conferencial.repository.ParticipantRepository;
-import com.herbert.conferencial.repository.RoomRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,84 +14,94 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 public class ConferenceServiceTest {
 
-    @Mock
-    RoomRepository roomRepository;
 
     @Mock
-    RoomService roomService;
-
-    @Mock
-    ParticipantRepository participantRepository;
-
-    @Mock
-    ParticipantService participantService;
-
-    @Mock
-    ConferenceRepository conferenceRepository;
+    private ConferenceRepository conferenceRepository;
 
     @InjectMocks
-    ConferenceService conferenceService;
+    private ConferenceService conferenceService;
 
-    Room testRoom = new Room();
-    Room testRoom2 = new Room();
-    Room testRoom3 = new Room();
-
-    Conference testConference = new Conference();
-    Conference testConference2 = new Conference();
-    Conference testConferenceInvalid = new Conference();
-
-    List<Conference> listOfTestConferences;
+    private Conference testConference;
 
     @BeforeEach
-    public void beforeEach() {
-        testRoom.setName("Room1");
-        testRoom.setLocation("street 1");
-        testRoom.setMaxSeats(10);
-
-        testRoom2.setName("Room2");
-        testRoom2.setLocation("street 2");
-        testRoom2.setMaxSeats(200);
-
-        testRoom3.setName("Room3");
-        testRoom3.setLocation("street 3");
-        testRoom3.setMaxSeats(999);
-        
-        testConference.setName("test 1");
-        testConference.setStartTime(LocalDateTime.now());
-        testConference.setEndTime(LocalDateTime.now().plusHours(1));
+    void beforeEach() {
+        testConference = new Conference();
+        testConference.setName("TestConf");
         testConference.setRoomId(1);
+        testConference.setStartTime(LocalDateTime.now().plusDays(2));
+        testConference.setEndTime(LocalDateTime.now().plusDays(2).plusHours(1));
         testConference.setCanceled(false);
-
-        testConference2.setName("test 2");
-        testConference2.setStartTime(LocalDateTime.now());
-        testConference2.setEndTime(LocalDateTime.now().plusHours(1));
-        testConference2.setRoomId(2);
-        testConference2.setCanceled(false);
-
-        testConferenceInvalid.setName("test 2");
-        testConferenceInvalid.setStartTime(LocalDateTime.now());
-        testConferenceInvalid.setEndTime(LocalDateTime.now().plusHours(1));
-        testConferenceInvalid.setRoomId(2);
-        testConferenceInvalid.setCanceled(false);
-
-        listOfTestConferences = List.of(testConference, testConference2);
-
-
     }
 
     @Test
-    public void addNewConferenceShouldSucceed() {
-//        Mockito.when(conferenceRepository.getConferencesInTimeRange(Mockito.any(),Mockito.any())).thenReturn(List.of(testConference2));
-//
-//        Mockito.when(conferenceService.addNewConference(testConference)).thenReturn(true);
-//
-//        boolean result = conferenceService.addNewConference(testConference);
-//
-//        Assertions.assertNotEquals(null, result);
-////        Assertions.assertEquals(result.getName(), testConference.getName());
+    void shouldReturnAllConferences() {
+        when(conferenceRepository.findAll()).thenReturn(List.of(testConference));
+
+        List<Conference> result = conferenceService.getAllConferences();
+
+        assertEquals(1, result.size());
+        assertEquals("TestConf", result.get(0).getName());
     }
 
+    @Test
+    void shouldReturnConferenceById() {
+        when(conferenceRepository.findById(1)).thenReturn(testConference);
+
+        Conference result = conferenceService.findConferenceById(1);
+
+        assertNotNull(result);
+        assertEquals("TestConf", result.getName());
+    }
+
+    @Test
+    void shouldThrowIfConferenceNameAlreadyExists() {
+        Conference existing = new Conference();
+        existing.setName("TestConf");
+
+        when(conferenceRepository.getConferencesInTimeRange(Mockito.any(), Mockito.any())).thenReturn(List.of(existing));
+
+        GeneralException ex = assertThrows(GeneralException.class, () -> {
+            conferenceService.addNewConference(testConference);
+        });
+
+        assertEquals("Conference with that name already exists", ex.getMessage());
+    }
+
+    @Test
+    void shouldThrowIfRoomIsBookedForRequestedTime() {
+        Conference conflicting = new Conference();
+        conflicting.setName("Other");
+        conflicting.setRoomId(1);
+        conflicting.setStartTime(testConference.getStartTime().minusMinutes(10));
+        conflicting.setEndTime(testConference.getStartTime().plusMinutes(30));
+        conflicting.setCanceled(false);
+
+        when(conferenceRepository.getConferencesInTimeRange(Mockito.any(), Mockito.any()))
+                .thenReturn(List.of(conflicting));
+
+        GeneralException ex = assertThrows(GeneralException.class, () -> {
+            conferenceService.addNewConference(testConference);
+        });
+
+        assertEquals("Room is already booked for that time", ex.getMessage());
+    }
+
+    @Test
+    void shouldThrowIfConferenceLessThanDayInAdvance() {
+        testConference.setStartTime(LocalDateTime.now().minusHours(1));
+
+        when(conferenceRepository.getConferencesInTimeRange(Mockito.any(), Mockito.any())).thenReturn(List.of());
+
+        GeneralException ex = assertThrows(GeneralException.class, () -> {
+            conferenceService.addNewConference(testConference);
+        });
+
+        assertEquals("Conference is less than a day in advance", ex.getMessage());
+    }
 }

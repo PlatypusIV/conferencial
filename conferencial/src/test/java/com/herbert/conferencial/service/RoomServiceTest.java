@@ -16,6 +16,7 @@ import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class RoomServiceTest {
+
     @Mock
     RoomRepository roomRepository;
 
@@ -42,8 +43,8 @@ public class RoomServiceTest {
     }
 
     @Test
-    void getRoomsShouldReturnAPageOfRooms() {
-        Mockito.when(roomService.getRooms()).thenReturn(testRoomsList);
+    void getRoomsShouldReturnAListOfRooms() {
+        Mockito.when(roomRepository.findAll()).thenReturn(testRoomsList);
 
         List<Room> listOfRooms = roomService.getRooms();
 
@@ -52,7 +53,7 @@ public class RoomServiceTest {
 
     @Test
     void addNewRoomShouldAddNewRoom() {
-        Mockito.when(roomService.addNewRoom(Mockito.any())).thenReturn(testRoom);
+        Mockito.when(roomRepository.save(Mockito.any())).thenReturn(testRoom);
 
         Room newlyAddedTestRoom = roomService.addNewRoom(testRoom);
 

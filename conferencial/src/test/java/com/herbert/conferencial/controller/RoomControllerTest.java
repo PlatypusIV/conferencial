@@ -1,4 +1,3 @@
 package com.herbert.conferencial.controller;
 
-public class RoomControllerTest {
-}
+public class RoomControllerTest { }

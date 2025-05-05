@@ -48,6 +48,4 @@ public class RoomController {
         Room room = roomService.getRoomById(id);
         return ResponseEntity.ok(room);
     }
-
-    //get available rooms by time
 }

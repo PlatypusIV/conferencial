@@ -28,8 +28,8 @@ public class ConferenceController {
 
     @PostMapping(path = "/")
     public ResponseEntity<?> addNewConference(@RequestBody Conference conference){
-        conferenceService.addNewConference(conference);
-        return new ResponseEntity<>("Created", HttpStatus.CREATED);
+        var createdConference = conferenceService.addNewConference(conference);
+        return new ResponseEntity<>(createdConference, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/{id}")

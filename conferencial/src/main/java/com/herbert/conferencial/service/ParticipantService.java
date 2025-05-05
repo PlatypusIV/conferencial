@@ -2,7 +2,6 @@ package com.herbert.conferencial.service;
 
 import com.herbert.conferencial.errorHandling.GeneralException;
 import com.herbert.conferencial.model.Participant;
-import com.herbert.conferencial.repository.ConferenceRepository;
 import com.herbert.conferencial.repository.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +45,7 @@ public class ParticipantService {
 
     public void validateRepeatingParticipants(Participant participant) {
         List<Participant> participantsOfConference = participantRepository.findAllParticipantsByConferenceId(participant.getConferenceId());
-        if((participantsOfConference.stream().noneMatch(p -> p.getFullName().equals(participant.getFullName()) && p.getBirthDate().equals(participant.getBirthDate())))){
+        if((participantsOfConference.stream().anyMatch(p -> p.getFullName().equals(participant.getFullName()) && p.getBirthDate().equals(participant.getBirthDate())))){
             throw new GeneralException("Participant is already taking part of conference");
         }
     }
