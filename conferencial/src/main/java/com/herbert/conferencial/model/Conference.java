@@ -13,30 +13,31 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "conference")
+@Getter
+@Entity(name = "Conference")
 @Table(name = "conference")
 public class Conference {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    public int id;
 
-    @Getter @Setter
+    @Setter
     private String name;
 
-    @Getter @Setter
+    @Setter
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
-    @Getter @Setter
+    @Setter
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    @Getter @Setter
+    @Setter
     @JoinColumn(name= "id", nullable = true)
     private int roomId;
 
-    @Getter @Setter
+    @Setter
     @Column(name = "is_canceled")
     private boolean isCanceled;
 

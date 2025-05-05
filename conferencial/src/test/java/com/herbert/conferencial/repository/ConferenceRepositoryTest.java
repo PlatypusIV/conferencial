@@ -1,78 +1,97 @@
 package com.herbert.conferencial.repository;
 
+import jakarta.persistence.EntityManager;
 import com.herbert.conferencial.model.Conference;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-public class ConferenceRepositoryTest {
-    @Mock
+@DataJpaTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ActiveProfiles("test")
+class ConferenceRepositoryTest {
+
+    @Autowired
     private ConferenceRepository conferenceRepository;
 
-    private Conference testConference;
+    @Autowired
+    private EntityManager entityManager;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    @Test
+    @Transactional
+    @Rollback
+    @DisplayName("Should save and retrieve conference by ID")
+    void shouldFindConferenceById() {
+        Conference conference = new Conference();
+        conference.setName("TestConf1");
+        conference.setStartTime(LocalDateTime.now());
+        conference.setEndTime(LocalDateTime.now().plusHours(2));
+        conference.setCanceled(false);
 
-        testConference = new Conference("Conf 1", LocalDateTime.now().minusHours(1),
-                LocalDateTime.now().plusHours(1), 1, false);
-        List<Conference> conferenceList = List.of(testConference);
+        conferenceRepository.save(conference);
 
-        when(conferenceRepository.findAll()).thenReturn(conferenceList);
-        when(conferenceRepository.findById(1)).thenReturn(testConference);
+        Conference found = conferenceRepository.findById(1);
+        assertNotNull(found);
+        assertEquals(found.getName(), "TestConf1");
     }
 
     @Test
-    void findAllShouldReturnListWithAllConferences() {
-        List<Conference> allConferences = conferenceRepository.findAll();
-        assertEquals(1, allConferences.size());
-        assertTrue(allConferences.contains(testConference));
+    @Transactional
+    @Rollback
+    @DisplayName("Should toggle isCanceled flag")
+    void shouldSetConferenceToCanceled() {
+        Conference conference = new Conference();
+        conference.setName("TestConference");
+        conference.setStartTime(LocalDateTime.now());
+        conference.setEndTime(LocalDateTime.now().plusHours(3));
+        conference.setCanceled(false);
+
+        Conference created = conferenceRepository.save(conference);
+        conferenceRepository.setConferenceToCanceled(created.getId());
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Conference updated = conferenceRepository.findById(created.getId());
+
+        assertTrue(updated.isCanceled());
+        assertEquals(updated.getName(), conference.getName());
     }
 
     @Test
-    void findByIdShouldReturntestConference() {
-        Conference foundConference = conferenceRepository.findById(1);
-        assertEquals("Conf 1", foundConference.getName());
-    }
+    @Transactional
+    @Rollback
+    @DisplayName("Should find conferences in time range")
+    void shouldFindConferencesInTimeRange() {
+        LocalDateTime now = LocalDateTime.now();
 
-    @Test
-    void getConferencesInTimeRangeShouldReturnListWithTestConference() {
-        LocalDateTime startTime = LocalDateTime.now().minusHours(2);
-        LocalDateTime endTime = LocalDateTime.now().plusHours(2);
+        Conference conf1 = new Conference();
+        conf1.setName("TestConference1");
+        conf1.setStartTime(now.minusHours(1));
+        conf1.setEndTime(now.plusHours(1));
+        conf1.setCanceled(false);
 
-        List<Conference> expectedConferences = List.of(testConference);
+        Conference conf2 = new Conference();
+        conf2.setName("TestConference2");
+        conf2.setStartTime(now.plusHours(5));
+        conf2.setEndTime(now.plusHours(6));
+        conf2.setCanceled(false);
 
-        when(conferenceRepository.getConferencesInTimeRange(startTime, endTime)).thenReturn(expectedConferences);
+        conferenceRepository.save(conf1);
+        conferenceRepository.save(conf2);
 
-        List<Conference> conferencesInTimeRange = conferenceRepository.getConferencesInTimeRange(startTime, endTime);
-
-        assertEquals(expectedConferences, conferencesInTimeRange);
-    }
-
-    @Test
-    void setConferenceToCanceledShouldCancelConferenceToCancel() {
-        Conference canceledConference = new Conference("Canceled conference", LocalDateTime.now(),
-                LocalDateTime.now().plusHours(2), 1, true);
-
-        when(conferenceRepository.setConferenceToCanceled(2)).thenReturn(canceledConference);
-
-        Conference result = conferenceRepository.setConferenceToCanceled(2);
-
-        assertTrue(result.isCanceled());
+        List<Conference> found = conferenceRepository.getConferencesInTimeRange(now.minusHours(2), now.plusHours(2));
+        assertEquals(found.size(), 1);
+        assertEquals(found.getFirst().getName(), "TestConference1");
     }
 }

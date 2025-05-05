@@ -28,13 +28,11 @@ public class ConferenceService {
         return conferenceRepository.findById(id);
     }
 
-    public boolean cancelOrUnCancelConference(int id) {
-        Conference alteredConference = conferenceRepository.setConferenceToCanceled(id);
-        return !alteredConference.getName().isEmpty();
+    public void cancelOrUnCancelConference(int id) {
+        conferenceRepository.setConferenceToCanceled(id);
     }
 
     public Conference addNewConference(Conference conference) {
-
         validateConference(conference);
         return conferenceRepository.save(conference);
     }

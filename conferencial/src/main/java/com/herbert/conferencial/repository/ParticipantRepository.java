@@ -11,7 +11,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Intege
     List<Participant> findAllParticipantsByConferenceId(int conferenceId);
     Participant findParticipantById(int id);
 
-    @Query("SELECT COUNT(*) FROM participant p WHERE p.conferenceId = :conferenceId")
+    @Query("SELECT COUNT(*) FROM Participant p WHERE p.conferenceId = :conferenceId")
     int findAmountOfParticipantsInConference(int conferenceId);
 
 }
