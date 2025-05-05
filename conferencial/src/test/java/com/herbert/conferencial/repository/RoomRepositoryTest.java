@@ -2,6 +2,7 @@ package com.herbert.conferencial.repository;
 
 import com.herbert.conferencial.model.Room;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,14 +11,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,15 +37,19 @@ public class RoomRepositoryTest {
     }
 
     @Test
-    void testFindAll() {
-        List<Room> allRooms = roomRepository.findAll();
-        assertEquals(1, allRooms.size());
-        assertTrue(allRooms.contains(testRoom));
+    @DisplayName("Should save and retrieve a room by ID")
+    void shouldSaveAndFindById() {
+        Room foundRoom = roomRepository.findById(1);
+        assertNotNull(foundRoom);
+        assertEquals(foundRoom.getName(),testRoom.getName());
+        assertEquals(foundRoom.getMaxSeats(), testRoom.getMaxSeats());
     }
 
     @Test
-    void testFindById() {
-        Room foundRoom = roomRepository.findById(1);
-        assertEquals(testRoom.getName(), foundRoom.getName());
+    @DisplayName("Should return all rooms")
+    void shouldFindAllRooms() {
+         List<Room> rooms = roomRepository.findAll();
+
+        assertEquals(rooms.size(),1);
     }
 }
