@@ -31,17 +31,4 @@ public class RoomService {
     public Room getRoomById(int roomId) {
         return roomRepository.findById(roomId);
     }
-
-    public boolean deleteRoomById(int id) {
-        if(roomRepository.existsById(id)){
-            roomRepository.deleteById(id);
-            return true;
-        }else {
-            return false;
-        }
-    }
-
-    //get available rooms in between timerange
-
-
 }

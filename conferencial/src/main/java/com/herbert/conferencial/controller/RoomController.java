@@ -1,5 +1,7 @@
 package com.herbert.conferencial.controller;
 
+import com.herbert.conferencial.errorHandling.GeneralException;
+import com.herbert.conferencial.errorHandling.GlobalExceptionHandler;
 import com.herbert.conferencial.model.Room;
 import com.herbert.conferencial.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,30 +24,23 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-    //add room
     @PostMapping(path = "/")
-    private Room addNewRoom(@RequestBody Room room) {
-        return roomService.addNewRoom(room);
+    public ResponseEntity<Room> addNewRoom(@RequestBody Room room) {
+        Room createdRoom = roomService.addNewRoom(room);
+        return ResponseEntity.ok(createdRoom);
     }
 
-    //remove room
-    @DeleteMapping(path = "/{roomId}")
-    private ResponseEntity<String> removeRoom(@PathVariable("roomId") int roomId) {
-        return (roomService.deleteRoomById(roomId))
-                ? new ResponseEntity<>("Deleted successfully", HttpStatus.NO_CONTENT)
-                : new ResponseEntity<>("Room not found", HttpStatus.NOT_FOUND);
-    }
-
-    //get all rooms
     @GetMapping(path = "/")
     public ResponseEntity<List<Room>> getAllRooms(Pageable page) {
         List<Room> rooms = roomService.getRooms();
         return ResponseEntity.ok(rooms);
     }
 
-    @GetMapping(path = "{id}")
-    public ResponseEntity<Room> getRoomById(@PathVariable("id") int id) {
+    @GetMapping(path = "/{id}")
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<?> getRoomById(@PathVariable("id") int id) {
         Room room = roomService.getRoomById(id);
+        if(room == null) return new ResponseEntity<>("Room not found", HttpStatus.NOT_FOUND);
         return ResponseEntity.ok(room);
     }
 }

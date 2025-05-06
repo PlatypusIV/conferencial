@@ -6,6 +6,7 @@ import com.herbert.conferencial.model.Participant;
 import com.herbert.conferencial.model.Room;
 import com.herbert.conferencial.repository.ParticipantRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -46,6 +47,7 @@ public class ParticipantServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw because participant is under 18")
     void shouldThrowIfParticipantIsUnder18() {
         testParticipant.setBirthDate(LocalDate.now().minusYears(17));
 
@@ -57,6 +59,7 @@ public class ParticipantServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw because participant is already in conference")
     void shouldThrowIfParticipantIsAlreadyInConference() {
          when(participantService.getParticipantsRelatedToConference(1)).thenReturn(List.of(testParticipant));
 
@@ -69,6 +72,7 @@ public class ParticipantServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw because conference is full")
     void shouldThrowIfConferenceIsFull() {
         when(participantRepository.findAmountOfParticipantsInConference(1)).thenReturn(100);
         when(conferenceService.findConferenceById(1)).thenReturn(new Conference());
@@ -82,6 +86,7 @@ public class ParticipantServiceTest {
     }
 
     @Test
+    @DisplayName("Should save valid participant")
     void shouldSaveValidParticipant() {
         when(participantRepository.findAllParticipantsByConferenceId(1))
                 .thenReturn(List.of());
