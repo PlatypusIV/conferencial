@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -80,7 +79,7 @@ public class RoomControllerTest {
     static class TestConfig {
         @Bean
         public RoomService roomService() {
-            return mock(RoomService.class);  // Mock RoomService
+            return mock(RoomService.class);
         }
     }
 }
