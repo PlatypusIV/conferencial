@@ -27,10 +27,8 @@ public class ParticipantController {
     }
 
     @PostMapping(path = "/")
-    public ResponseEntity<?> addNewParticipant(@RequestBody Participant participant){
+    public ResponseEntity<?> addNewParticipant(@RequestBody Participant participant) {
         Participant participant1 = participantService.addNewParticipant(participant);
-        return new ResponseEntity<>("Created", HttpStatus.CREATED);
+        return new ResponseEntity<>(participant1, HttpStatus.CREATED);
     }
-
-
 }

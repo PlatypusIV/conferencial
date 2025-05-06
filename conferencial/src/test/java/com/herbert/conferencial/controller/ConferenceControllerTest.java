@@ -99,7 +99,7 @@ public class ConferenceControllerTest {
 
     @Test
     @DisplayName("Should successfully cancel conference with id 1")
-    void shouldCaancelConferenceById() throws Exception {
+    void shouldCancelConferenceById() throws Exception {
 
         mockMvc.perform(patch("/conferences/cancel/1"))
                 .andExpect(status().isOk())
