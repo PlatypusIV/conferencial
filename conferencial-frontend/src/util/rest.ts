@@ -8,7 +8,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return await response.json();
 }
 
-export async function getRequest<T = any>(url: string, options?: RequestInit): Promise<T> {
+export async function getRequest<T = unknown>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${url}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
@@ -17,7 +17,7 @@ export async function getRequest<T = any>(url: string, options?: RequestInit): P
   return await handleResponse<T>(response);
 }
 
-export async function postRequest<T = any>(url: string, data: any, options?: RequestInit): Promise<T> {
+export async function postRequest<T = unknown>(url: string, data: unknown, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${url}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -27,7 +27,7 @@ export async function postRequest<T = any>(url: string, data: any, options?: Req
   return await handleResponse<T>(response);
 }
 
-export async function patchRequest<T = any>(url: string, data: any, options?: RequestInit): Promise<T> {
+export async function patchRequest<T = unknown>(url: string, data: unknown, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${url}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
@@ -37,7 +37,7 @@ export async function patchRequest<T = any>(url: string, data: any, options?: Re
   return await handleResponse<T>(response);
 }
 
-export async function deleteRequest<T = any>(url: string, options?: RequestInit): Promise<T> {
+export async function deleteRequest<T = unknown>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${url}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
