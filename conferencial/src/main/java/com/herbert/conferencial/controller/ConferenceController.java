@@ -32,7 +32,11 @@ public class ConferenceController {
     }
 
     @PostMapping(path = "/")
-    public ResponseEntity<?> addNewConference(@RequestBody Conference conference){
+    public ResponseEntity<?> addNewConference(@RequestBody Conference conference) {
+
+        System.out.println(start);
+        System.out.println(end);
+
         var createdConference = conferenceService.addNewConference(conference);
         return new ResponseEntity<>(createdConference, HttpStatus.CREATED);
     }

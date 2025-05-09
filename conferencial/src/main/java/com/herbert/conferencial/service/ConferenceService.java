@@ -33,6 +33,7 @@ public class ConferenceService {
     }
 
     public Conference addNewConference(Conference conference) {
+
         validateConference(conference);
         return conferenceRepository.save(conference);
     }

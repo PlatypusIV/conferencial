@@ -25,13 +25,13 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-    @PostMapping(path = "/")
+    @PostMapping
     public ResponseEntity<Room> addNewRoom(@RequestBody Room room) {
         Room createdRoom = roomService.addNewRoom(room);
         return ResponseEntity.ok(createdRoom);
     }
 
-    @GetMapping(path = "/")
+    @GetMapping
     public ResponseEntity<List<Room>> getAllRooms(Pageable page) {
         List<Room> rooms = roomService.getRooms();
         return ResponseEntity.ok(rooms);
