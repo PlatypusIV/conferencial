@@ -20,8 +20,8 @@ public class ConferenceService {
         this.conferenceRepository = conferenceRepository;
     }
 
-    public List<Conference> getAllConferences() {
-        return conferenceRepository.findAll();
+    public List<Conference> getAllConferencesBetweenTimeRange(LocalDateTime start, LocalDateTime end) {
+        return conferenceRepository.getConferencesInTimeRange(start, end);
     }
 
     public Conference findConferenceById(int id) {

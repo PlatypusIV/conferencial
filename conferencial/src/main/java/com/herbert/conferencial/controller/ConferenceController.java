@@ -3,13 +3,16 @@ package com.herbert.conferencial.controller;
 import com.herbert.conferencial.model.Conference;
 import com.herbert.conferencial.service.ConferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/conferences")
 public class ConferenceController {
 
@@ -20,9 +23,11 @@ public class ConferenceController {
         this.conferenceService = conferenceService;
     }
 
-    @GetMapping(path = "/")
-    public ResponseEntity<List<Conference>> getAllConferences() {
-        var conferenceList = conferenceService.getAllConferences();
+    @GetMapping
+    public ResponseEntity<List<Conference>> getAllConferencesBetweenTimeRange(@RequestParam String start, @RequestParam String end) {
+        LocalDateTime startTime = LocalDateTime.parse(start);
+        LocalDateTime endTime = LocalDateTime.parse(end);
+        var conferenceList = conferenceService.getAllConferencesBetweenTimeRange(startTime, endTime);
         return ResponseEntity.ok(conferenceList);
     }
 

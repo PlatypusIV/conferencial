@@ -1,41 +1,33 @@
-import React, { useEffect } from 'react'
-import type { BadgeProps, CalendarProps } from 'antd'
-import { Badge, Calendar } from 'antd'
-import type { Dayjs } from 'dayjs'
-import { useAppSelector, useAppDispatch } from '../../store/hooks'
-import dayjs from 'dayjs'
+import React, { useEffect } from 'react';
+import type { CalendarProps } from 'antd';
+import { Calendar } from 'antd';
+import type { Dayjs } from 'dayjs';
+import { useAppSelector } from '../../store/hooks';
+import dayjs from 'dayjs';
+import './CalendarContainer.css';
+
+
 
 export default function CalendarContainer() {
   const conferences = useAppSelector((state)=> state.conference.conferences);
   useEffect(()=>{
-    console.log(conferences);
+    console.log("regular conferences: " + conferences.toString());
   },[conferences]);
 
   const dateCellRender = (value: Dayjs) => {
-
-    const sortedConferences = conferences.filter((c)=> dayjs(c.startTime).isSame(value, 'day'));
-    console.log(sortedConferences);
+    const sortedConferencesForTheDay = conferences.filter((c)=> dayjs(c.startTime).date() === value.date());
+    console.log("Sorted conferences: " + sortedConferencesForTheDay.toString());
 
     return (
-      <ul className="events">
-        {sortedConferences.map((conference) => (
+      <ul className="conferenceCalenderEventList">
+        {sortedConferencesForTheDay.map((conference) => (
           <li key={conference.id}>
-            <Badge text={conference.name} />
+            <div className='calendarConferenceSelectionDiv'>{conference.name} : {dayjs(conference.startTime).format("HH:mm")}</div>
           </li>
         ))}
       </ul>
     );
   };
-
-  // const monthCellRender = (value: Dayjs) => {
-  //   const num = getMonthData(value);
-  //   return num ? (
-  //     <div className="notes-month">
-  //       <section>{num}</section>
-  //       <span>Backlog number</span>
-  //     </div>
-  //   ) : null;
-  // };
 
   const cellRender: CalendarProps<Dayjs>['cellRender'] = (current, info) => {
     if (info.type === 'date') return dateCellRender(current);

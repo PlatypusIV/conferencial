@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/participants")
 public class ParticipantController {
 
@@ -26,7 +27,7 @@ public class ParticipantController {
         return ResponseEntity.ok(conferenceParticipants);
     }
 
-    @PostMapping(path = "/")
+    @PostMapping
     public ResponseEntity<?> addNewParticipant(@RequestBody Participant participant) {
         Participant participant1 = participantService.addNewParticipant(participant);
         return new ResponseEntity<>(participant1, HttpStatus.CREATED);

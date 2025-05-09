@@ -40,13 +40,14 @@ public class ConferenceServiceTest {
     }
 
     @Test
-    void shouldReturnAllConferences() {
-        when(conferenceRepository.findAll()).thenReturn(List.of(testConference));
+    void shouldReturnAllConferencesInTimeRange() {
+        LocalDateTime now = LocalDateTime.now();
+        when(conferenceRepository.getConferencesInTimeRange(Mockito.any(), Mockito.any())).thenReturn(List.of(testConference));
 
-        List<Conference> result = conferenceService.getAllConferences();
+        List<Conference> result = conferenceService.getAllConferencesBetweenTimeRange(now.minusHours(10), now.plusHours(10));
 
         assertEquals(1, result.size());
-        assertEquals("TestConf", result.get(0).getName());
+        assertEquals("TestConf", result.getFirst().getName());
     }
 
     @Test

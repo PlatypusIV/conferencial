@@ -14,6 +14,7 @@ const conferenceSlice = createSlice({
     initialState,
     reducers:{
         setConferences: (state: ConferenceState, action) => {
+            console.log("action payload: " + action.payload);
             state.conferences = action.payload;
         }
     }

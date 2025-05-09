@@ -46,7 +46,7 @@ public class ParticipantControllerTest {
 
         when(participantService.addNewParticipant(Mockito.any())).thenReturn(testParticipant);
 
-        mockMvc.perform(post("/participants/")
+        mockMvc.perform(post("/participants")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(testParticipant)))
                 .andExpect(status().isCreated())

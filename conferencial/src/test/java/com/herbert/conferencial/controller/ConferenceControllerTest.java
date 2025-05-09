@@ -62,6 +62,8 @@ public class ConferenceControllerTest {
     @Test
     @DisplayName("Should successfully get all conferences")
     void shouldGetAllConferences() throws Exception {
+        LocalDateTime now = LocalDateTime.now();
+        String urlStart = String.format("/conferences?start=%s&end=%s", now.minusHours(10),now.plusHours(10) );
         Conference testConference = new Conference();
         testConference.setName("TestConf");
         testConference.setRoomId(1);
@@ -69,9 +71,9 @@ public class ConferenceControllerTest {
         testConference.setEndTime(LocalDateTime.now().plusDays(2).plusHours(1));
         testConference.setCanceled(false);
 
-        when(conferenceService.getAllConferences()).thenReturn(List.of(testConference));
+        when(conferenceService.getAllConferencesBetweenTimeRange(Mockito.any(), Mockito.any())).thenReturn(List.of(testConference));
 
-        mockMvc.perform(get("/conferences/"))
+        mockMvc.perform(get(urlStart))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(testConference.getName()))
                 .andExpect(jsonPath("$[0].roomId").value(testConference.getRoomId()))

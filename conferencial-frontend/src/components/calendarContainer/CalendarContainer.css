@@ -2,3 +2,19 @@
     width: 100%;
     height: 90%;
 }
+
+.conferenceCalenderEventList {
+    font-weight: bold;
+}
+
+.conferenceCalenderEventList li {
+    list-style: none;
+}
+
+.conferenceCalenderEventList li:hover {
+    list-style: none;
+}
+
+.calendarConferenceSelectionDiv {
+
+}
