@@ -1,4 +1,5 @@
 {
     "conferences": "/conferences",
-    "participants": "/participants"
+    "participants": "/participants",
+    "rooms": "/rooms"
 }

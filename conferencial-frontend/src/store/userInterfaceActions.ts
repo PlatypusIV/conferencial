@@ -1,7 +1,13 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-const initialState = {
-    
+interface InitialState {
+    isConferenceFormOpen: boolean;
+    selectedDate?: string;
+}
+
+const initialState: InitialState = {
+    isConferenceFormOpen: false,
+    selectedDate: undefined
 }
 
 const userInterfaceSlice = createSlice({
@@ -9,10 +15,14 @@ const userInterfaceSlice = createSlice({
     initialState,
     reducers:{
         setConferenceFormIsOpen: (state, action) => {
-            state = action.payload;
+            state.isConferenceFormOpen = action.payload;
+        },
+        setSelectedDate: (state, action) => {
+            state.selectedDate = action.payload;
         }
+
     }
 });
 
-export const {setConferenceFormIsOpen} = userInterfaceSlice.actions;
+export const {setConferenceFormIsOpen, setSelectedDate} = userInterfaceSlice.actions;
 export default userInterfaceSlice.reducer;

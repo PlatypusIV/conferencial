@@ -2,27 +2,32 @@ import React, { useEffect } from 'react';
 import type { CalendarProps } from 'antd';
 import { Calendar } from 'antd';
 import type { Dayjs } from 'dayjs';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import dayjs from 'dayjs';
 import './CalendarContainer.css';
+import { setConferenceFormIsOpen,setSelectedDate } from '../../store/userInterfaceActions';
 
 
 
 export default function CalendarContainer() {
   const conferences = useAppSelector((state)=> state.conference.conferences);
-  useEffect(()=>{
-    console.log("regular conferences: " + conferences.toString());
-  },[conferences]);
+  const rooms = useAppSelector((state)=> state.room.rooms);
+  const dispatch = useAppDispatch();
+
+  const openConferenceForm = (date: Dayjs) => {
+    dispatch(setSelectedDate(date));
+    dispatch(setConferenceFormIsOpen(true));
+  }
 
   const dateCellRender = (value: Dayjs) => {
-    const sortedConferencesForTheDay = conferences.filter((c)=> dayjs(c.startTime).date() === value.date());
-    console.log("Sorted conferences: " + sortedConferencesForTheDay.toString());
+    const sortedConferencesForTheDay = conferences.filter((c)=> dayjs(c.startTime).date() === value.date() && dayjs(c.startTime).month() === value.month());
 
     return (
       <ul className="conferenceCalenderEventList">
         {sortedConferencesForTheDay.map((conference) => (
           <li key={conference.id}>
-            <div className='calendarConferenceSelectionDiv'>{conference.name} : {dayjs(conference.startTime).format("HH:mm")}</div>
+            <div className='calendarConferenceSelectionDiv'>{conference.name} : {dayjs(conference.startTime).format("HH:mm")} - {dayjs(conference.endTime).format("HH:mm")} - Room: {rooms.find(r=>r.id === conference.roomId)?.name}</div>
+            <br/>
           </li>
         ))}
       </ul>
@@ -36,7 +41,7 @@ export default function CalendarContainer() {
 
   return (
     <div className='calendarContainerDiv'>
-      <Calendar onSelect={(e)=>console.log(e)} cellRender={cellRender} showWeek={true}/>
+      <Calendar onSelect={(date)=>openConferenceForm(date)} cellRender={cellRender} showWeek={true}/>
       </div>
   )
 }

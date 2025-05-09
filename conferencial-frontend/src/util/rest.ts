@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8080'; // Change as needed
+const BASE_URL = 'http://localhost:8080';
 
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {

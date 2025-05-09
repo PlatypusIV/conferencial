@@ -7,6 +7,8 @@ import { setConferences } from './store/conferenceActions';
 import urls from "./util/urls.json";
 import { useAppDispatch, useConferences } from './store/hooks';
 import dayjs from 'dayjs';
+import ConferenceForm from './components/conferenceForm/ConferenceForm';
+import { setRooms } from './store/roomActions';
 
 
 function App() {
@@ -20,15 +22,18 @@ function App() {
   async function init() {
     const startOfCurrentMonth = dayjs().startOf('month').format('YYYY-MM-DDTHH:mm');
     const endOfCurrentMonth = dayjs().endOf('month').format('YYYY-MM-DDTHH:mm');
-    const newConferences = await getRequest(`${urls.conferences}?start=${startOfCurrentMonth}&end=${endOfCurrentMonth}`);
+    const conferencesThatMonth = await getRequest(`${urls.conferences}?start=${startOfCurrentMonth}&end=${endOfCurrentMonth}`);
+    const rooms = await getRequest(urls.rooms);
     
-    dispatch(setConferences(newConferences));
+    dispatch(setConferences(conferencesThatMonth));
+    dispatch(setRooms(rooms));
   }
 
   return (
     <>
       <Header></Header>
       {conferences.length? <CalendarContainer/> : <div></div>}
+      <ConferenceForm></ConferenceForm>
     </>
   )
 }
