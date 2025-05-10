@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import type { CalendarProps } from 'antd';
 import { Calendar } from 'antd';
 import type { Dayjs } from 'dayjs';

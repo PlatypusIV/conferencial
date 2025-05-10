@@ -9,6 +9,7 @@ import { useAppDispatch, useConferences } from './store/hooks';
 import dayjs from 'dayjs';
 import ConferenceForm from './components/conferenceForm/ConferenceForm';
 import { setRooms } from './store/roomActions';
+import FeedbackMessage from './components/feedbackMessage/FeedbackMessage';
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
       <Header></Header>
       {conferences.length? <CalendarContainer/> : <div></div>}
       <ConferenceForm></ConferenceForm>
+      <FeedbackMessage />
     </>
   )
 }

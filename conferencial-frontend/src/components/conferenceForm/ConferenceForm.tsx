@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal, Space, Form, Input, TimePicker, Select } from 'antd';
 import { useAppDispatch, useAppSelector, useConferences, useRooms, useSelectedDate } from '../../store/hooks';
-import { setConferenceFormIsOpen } from '../../store/userInterfaceActions';
+import { setConferenceFormIsOpen, setIsError, setMessageText } from '../../store/userInterfaceActions';
 import type { Conference, Room } from '../../util/interfaces';
 import { getRequest, postRequest } from '../../util/rest';
 import urls from "../../util/urls.json";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import type { DefaultOptionType } from 'antd/es/select';
 
 const emptyConference: Conference = {
@@ -27,19 +27,27 @@ export default function ConferenceForm() {
     console.log(createdConference);
   },[createdConference]);
 
-  useEffect(()=> {
-    console.log(selectedDate);
-  },[selectedDate]);
-
   function createRoomOptionsArray() {
     return rooms.map(r => {return {value: r.id, label: r.name}}) as DefaultOptionType[];
   };
 
   const handleOk = async () => {
-    console.log(createdConference);
-    const response = await postRequest(`${urls.conferences}/`,createdConference);
-    console.log(response.status);
+    try {
+      const response = await postRequest(`${urls.conferences}/`,createdConference);
+      
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Incorrect data");
+    }
+    dispatch(setIsError(false));
+    dispatch(setMessageText("Conference successfully created."));
+    setCreatedConference(emptyConference);
     dispatch(setConferenceFormIsOpen(false));
+    } catch (error) {
+      dispatch(setIsError(true));
+      dispatch(setMessageText((error as Error).message));
+    }
+    
   };
 
   const handleCancel = () => {

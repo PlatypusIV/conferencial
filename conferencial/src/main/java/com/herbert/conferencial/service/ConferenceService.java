@@ -63,6 +63,11 @@ public class ConferenceService {
         if (isLessThanDayInAdvance) {
             throw new GeneralException("Conference is less than a day in advance");
         }
+
+        boolean isInThePast = conference.getStartTime().isBefore(LocalDateTime.now());
+        if (isInThePast) {
+            throw new GeneralException("Conference is in the past");
+        }
     }
 
     private boolean validateRoomOccupation(List<Conference> conferencesToCompareTo, Conference conferenceInComparison) {
