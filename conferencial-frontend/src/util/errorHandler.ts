@@ -1,11 +1,8 @@
-import { useAppDispatch } from "../store/hooks";
-import { setMessageText } from "../store/userInterfaceActions";
+import { setIsError, setMessageText } from "../store/userInterfaceActions";
 
-
-
-function useHandleResponseError(error: string | unknown): void {
-    const dispatch = useAppDispatch();
+function handleResponseError(dispatch: (arg0: { payload: unknown; type: "userInterface/setIsError" | "userInterface/setMessageText"; }) => void, error: string | unknown): void {
+    dispatch(setIsError(true));
     dispatch(setMessageText(error));
 }
 
-export default useHandleResponseError;
+export default handleResponseError;
