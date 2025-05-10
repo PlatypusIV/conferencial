@@ -3,6 +3,12 @@
     height: 90%;
 }
 
+.calendarCellDiv {
+    width: 100%;
+    height: 100%;
+    border: 2px solid black;
+}
+
 .conferenceCalenderEventList {
     font-weight: bold;
 }
@@ -13,8 +19,4 @@
 
 .conferenceCalenderEventList li:hover {
     list-style: none;
-}
-
-.calendarConferenceSelectionDiv {
-
 }

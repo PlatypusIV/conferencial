@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Modal, Form, Input, TimePicker, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, Form, Input, TimePicker, Select, Button, message, Space } from 'antd';
 import { useAppDispatch, useAppSelector, useRooms, useSelectedDate } from '../../store/hooks';
 import { setConferenceFormIsOpen, setIsError, setMessageText } from '../../store/userInterfaceActions';
 import type { Conference } from '../../util/interfaces';
@@ -9,6 +9,11 @@ import dayjs from 'dayjs';
 import type { DefaultOptionType } from 'antd/es/select';
 import handleResponseError from '../../util/errorHandler';
 
+
+interface Props {
+  refreshConferences: () => Promise<void>;
+}
+
 const emptyConference: Conference = {
   name:"",
   roomId:0,
@@ -16,12 +21,17 @@ const emptyConference: Conference = {
   endTime: ""
 }
 
-export default function ConferenceForm() {
+export default function ConferenceForm(props: Props) {
+  const [form] = Form.useForm();
   const isOpen = useAppSelector((state)=> state.userInterface.isConferenceFormOpen);
   const dispatch = useAppDispatch();
   const rooms = useRooms();
   const selectedDate = useSelectedDate();
   const [createdConference, setCreatedConference] = useState<Conference>(emptyConference);
+
+  useEffect(()=>{
+    console.log("created conference: " + createdConference);
+  }, []);
 
   function createRoomOptionsArray() {
     return rooms.map(r => {return {value: r.id, label: r.name}}) as DefaultOptionType[];
@@ -29,18 +39,16 @@ export default function ConferenceForm() {
 
   const handleOk = async () => {
     try {
-      const response = await postRequest(`${urls.conferences}/`,createdConference);
       
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Incorrect data");
-    }
+      await postRequest(`${urls.conferences}/`,createdConference);
       dispatch(setIsError(false));
       dispatch(setMessageText("Conference successfully created."));
+      await props.refreshConferences();
       setCreatedConference(emptyConference);
       dispatch(setConferenceFormIsOpen(false));
     } catch (error) {
-      handleResponseError(dispatch,(error as Error).message)
+      message.error((error as Error).message)
+      // handleResponseError(dispatch,)
     }
     
   };
@@ -65,9 +73,9 @@ export default function ConferenceForm() {
         open={isOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        footer={(_, { OkBtn, CancelBtn }) => (
+        footer={(_, {CancelBtn }) => (
           <>
-            <Form name='createConference'>
+            <Form name='createConference' form={form} onFinish={handleOk}>
               <Form.Item 
                 label="Conference Name"
                 name="conferenceName"
@@ -90,9 +98,17 @@ export default function ConferenceForm() {
                >
                 <Select options={createRoomOptionsArray()} onSelect={(newValue)=>setCreatedConference({...createdConference, roomId:newValue})}/>
                </Form.Item>
+               <Form.Item>
+                  <Space>
+                  <CancelBtn />
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
+                  </Space>
+               </Form.Item>
+               
             </Form>
-            <CancelBtn />
-            <OkBtn/>
+            
           </>
         )}
       >
