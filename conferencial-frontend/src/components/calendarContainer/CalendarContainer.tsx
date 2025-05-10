@@ -5,8 +5,9 @@ import type { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import dayjs from 'dayjs';
 import './CalendarContainer.css';
-import { setConferenceFormIsOpen,setSelectedDate, setSelectedMonth } from '../../store/userInterfaceActions';
+import { setIsConferenceEditingFormOpen, setIsConferenceFormOpen,setSelectedDate, setSelectedMonth } from '../../store/userInterfaceActions';
 import type { Conference } from '../../util/interfaces';
+import { setSelectedConference } from '../../store/conferenceActions';
 
 
 
@@ -16,15 +17,16 @@ export default function CalendarContainer() {
 
   const openConferenceForm = (date: Dayjs) => {
     dispatch(setSelectedDate(date));
-    dispatch(setConferenceFormIsOpen(true));
+    dispatch(setIsConferenceFormOpen(true));
   }
 
   const openEditExistingConferenceForm = (conference: Conference) => {
-    console.log(conference);
+    console.log("TEST");
+    dispatch(setSelectedConference(conference));
+    dispatch(setIsConferenceEditingFormOpen(true));
   }
 
   const onPanelChange= (value: Dayjs) => {
-    console.log("value: " + value.month());
     dispatch(setSelectedMonth(value.month()));
   }
 
@@ -33,12 +35,12 @@ export default function CalendarContainer() {
     const sortedConferencesForTheDay = conferences.filter((c)=> dayjs(c.startTime).date() === value.date() && dayjs(c.startTime).month() === value.month());
 
     return (
-      <div className='calendarCellDiv'>
-        <Button onClick={()=>openConferenceForm(value)}>+</Button>
+      <div className='calendarCellContainer'>
+        <Button onClick={()=>openConferenceForm(value)} className='addConferenceButton' type='primary'>+</Button>
       <ul className="conferenceCalenderEventList" >
         {sortedConferencesForTheDay.map((conference) => (
           <li key={conference.id} onClick={()=> openEditExistingConferenceForm(conference)}>
-            <div className='calendarConferenceSelectionDiv'>{conference.name} : {dayjs(conference.startTime).format("HH:mm")} - {dayjs(conference.endTime).format("HH:mm")}</div>
+            <div className='calendarConferenceSelectionContainer'>{conference.name} : {dayjs(conference.startTime).format("HH:mm")} - {dayjs(conference.endTime).format("HH:mm")}</div>
             <br/>
           </li>
         ))}
@@ -53,9 +55,10 @@ export default function CalendarContainer() {
   };
 
   return (
-    <div className='calendarContainerDiv'>
+    <div className='calendarContainerContainer'>
       {/* onSelect={(date)=>openConferenceForm(date)} */}
       <Calendar 
+      className='calendarMain'
       onPanelChange={onPanelChange}
        cellRender={cellRender}
        showWeek={true}/>

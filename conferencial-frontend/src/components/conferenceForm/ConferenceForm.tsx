@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Modal, Form, Input, TimePicker, Select, Button, message, Space } from 'antd';
 import { useAppDispatch, useAppSelector, useRooms, useSelectedDate } from '../../store/hooks';
-import { setConferenceFormIsOpen, setIsError, setMessageText } from '../../store/userInterfaceActions';
+import { setIsConferenceFormOpen } from '../../store/userInterfaceActions';
 import type { Conference } from '../../util/interfaces';
 import { postRequest } from '../../util/rest';
 import urls from "../../util/urls.json";
 import dayjs from 'dayjs';
 import type { DefaultOptionType } from 'antd/es/select';
-import handleResponseError from '../../util/errorHandler';
 
 
 interface Props {
@@ -29,10 +28,6 @@ export default function ConferenceForm(props: Props) {
   const selectedDate = useSelectedDate();
   const [createdConference, setCreatedConference] = useState<Conference>(emptyConference);
 
-  useEffect(()=>{
-    console.log("created conference: " + createdConference);
-  }, []);
-
   function createRoomOptionsArray() {
     return rooms.map(r => {return {value: r.id, label: r.name}}) as DefaultOptionType[];
   };
@@ -41,20 +36,18 @@ export default function ConferenceForm(props: Props) {
     try {
       
       await postRequest(`${urls.conferences}/`,createdConference);
-      dispatch(setIsError(false));
-      dispatch(setMessageText("Conference successfully created."));
+      message.success("Conference successfully created.");
       await props.refreshConferences();
       setCreatedConference(emptyConference);
-      dispatch(setConferenceFormIsOpen(false));
+      dispatch(setIsConferenceFormOpen(false));
     } catch (error) {
       message.error((error as Error).message)
-      // handleResponseError(dispatch,)
     }
     
   };
 
   const handleCancel = () => {
-    dispatch(setConferenceFormIsOpen(false));
+    dispatch(setIsConferenceFormOpen(false));
     setCreatedConference(emptyConference);
   }
 
@@ -79,7 +72,7 @@ export default function ConferenceForm(props: Props) {
               <Form.Item 
                 label="Conference Name"
                 name="conferenceName"
-                rules={[{required: true, message: "Please input conference name"}]}
+                rules={[{required: true, message: "Please input conference name", max:150}]}
                >
                 <Input placeholder='Example conference' onChange={(newValue)=> setCreatedConference({...createdConference, name:newValue.target.value})}/>
                </Form.Item>
@@ -106,9 +99,7 @@ export default function ConferenceForm(props: Props) {
                   </Button>
                   </Space>
                </Form.Item>
-               
             </Form>
-            
           </>
         )}
       >

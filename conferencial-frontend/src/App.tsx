@@ -5,15 +5,14 @@ import CalendarContainer from './components/calendarContainer/CalendarContainer'
 import { getRequest } from './util/rest';
 import { setConferences } from './store/conferenceActions';
 import urls from "./util/urls.json";
-import { useAppDispatch, useAppSelector, useConferences } from './store/hooks';
+import { useAppDispatch, useAppSelector } from './store/hooks';
 import dayjs from 'dayjs';
 import ConferenceForm from './components/conferenceForm/ConferenceForm';
 import { setRooms } from './store/roomActions';
-import FeedbackMessage from './components/feedbackMessage/FeedbackMessage';
+import ConferenceEditingForm from './components/conferenceEditingForm/ConferenceEditingForm';
 
 
 function App() {
-  const conferences = useConferences();
   const selectedMonth = useAppSelector((state)=>state.userInterface.selectedMonth);
   const dispatch = useAppDispatch();
 
@@ -22,7 +21,6 @@ function App() {
   },[]);
 
   useEffect(()=>{
-    console.log("selectedmonth has changed: " + selectedMonth);
     refreshConferences();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[selectedMonth]);
@@ -51,7 +49,7 @@ function App() {
       <Header></Header>
       <CalendarContainer/>
       <ConferenceForm refreshConferences={refreshConferences}></ConferenceForm>
-      <FeedbackMessage />
+      <ConferenceEditingForm />
     </>
   )
 }

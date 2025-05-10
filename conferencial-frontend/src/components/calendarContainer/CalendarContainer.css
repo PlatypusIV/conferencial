@@ -1,12 +1,13 @@
-.calendarContainerDiv {
+.calendarContainerContainer {
     width: 100%;
     height: 90%;
 }
 
-.calendarCellDiv {
+.calendarCellContainer {
     width: 100%;
     height: 100%;
     border: 2px solid black;
+    cursor: default;
 }
 
 .conferenceCalenderEventList {
@@ -15,8 +16,5 @@
 
 .conferenceCalenderEventList li {
     list-style: none;
-}
-
-.conferenceCalenderEventList li:hover {
-    list-style: none;
+    cursor: pointer;
 }
