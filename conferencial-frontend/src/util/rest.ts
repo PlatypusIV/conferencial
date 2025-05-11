@@ -17,14 +17,14 @@ export async function getRequest(url: string, options?: RequestInit): Promise<Re
   return await handleResponse(response);
 }
 
-export async function postRequest(url: string, data: unknown, options?: RequestInit): Promise<Response> {
+export async function postRequest<T = unknown>(url: string, data: unknown, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${url}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
     ...options,
   });
-  return await handleResponse(response);
+  return await handleResponse<T>(response);
 }
 
 export async function patchRequest<T= unknown>(url: string, data: unknown, options?: RequestInit): Promise<T> {
