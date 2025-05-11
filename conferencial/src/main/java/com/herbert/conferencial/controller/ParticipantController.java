@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -36,6 +37,8 @@ public class ParticipantController {
     @DeleteMapping(path="/delete/{id}")
     public ResponseEntity<?> deleteParticipant(@PathVariable("id") int id){
         participantService.removeParticipantFromConference(id);
-        return new ResponseEntity<>("Deleted", HttpStatus.NO_CONTENT);
+
+        Map<String, String> response = Map.of("message", "Participant removed from successfully");
+        return ResponseEntity.ok(response);
     }
 }
