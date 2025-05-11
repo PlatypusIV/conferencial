@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
 async function handleResponse<T=unknown>(response: Response): Promise<T> {
   if (!response.ok) {

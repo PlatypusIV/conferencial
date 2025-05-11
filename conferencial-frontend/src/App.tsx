@@ -7,9 +7,9 @@ import { setConferences } from './store/conferenceActions';
 import urls from "./util/urls.json";
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import dayjs from 'dayjs';
-import ConferenceForm from './components/conferenceCreationModal/ConferenceCreationModal';
+import ConferenceCreationModal from './components/conferenceCreationModal/ConferenceCreationModal';
 import { setRooms } from './store/roomActions';
-import ConferenceEditingForm from './components/conferenceEditingModal/ConferenceEditingModal';
+import ConferenceEditingModal from './components/conferenceEditingModal/ConferenceEditingModal';
 
 
 function App() {
@@ -48,8 +48,8 @@ function App() {
     <>
       <Header></Header>
       <CalendarContainer/>
-      <ConferenceForm refreshConferences={refreshConferences}></ConferenceForm>
-      <ConferenceEditingForm />
+      <ConferenceCreationModal refreshConferences={refreshConferences} />
+      <ConferenceEditingModal />
     </>
   )
 }

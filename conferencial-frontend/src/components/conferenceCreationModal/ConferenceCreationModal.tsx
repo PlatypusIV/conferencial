@@ -93,7 +93,7 @@ export default function ConferenceCreationModal(props: Props) {
                 name="room"
                 rules={[{required: true, message: "Please select a room"}]}
                >
-                <Select options={createRoomOptionsArray()} onSelect={(newValue)=>setCreatedConference({...createdConference, roomId:newValue})}/>
+                <Select options={createRoomOptionsArray()} onSelect={(newValue)=>setCreatedConference({...createdConference, roomId:newValue})} className='roomSelectionDropdown'/>
                </Form.Item>
                <Form.Item>
                   <Space>
