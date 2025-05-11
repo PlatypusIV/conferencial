@@ -45,7 +45,7 @@ public class ConferenceController {
 
     @PatchMapping(path = "/cancel/{id}")
     public ResponseEntity<?> cancelConference(@PathVariable("id") int id){
-        conferenceService.cancelOrUnCancelConference(id);
-        return new ResponseEntity<>("Canceled", HttpStatus.OK);
+        Conference canceledConference =conferenceService.cancelOrUnCancelConference(id);
+        return new ResponseEntity<>(canceledConference, HttpStatus.OK);
     }
 }

@@ -28,8 +28,9 @@ public class ConferenceService {
         return conferenceRepository.findById(id);
     }
 
-    public void cancelOrUnCancelConference(int id) {
+    public Conference cancelOrUnCancelConference(int id) {
         conferenceRepository.setConferenceToCanceled(id);
+        return conferenceRepository.findById(id);
     }
 
     public Conference addNewConference(Conference conference) {

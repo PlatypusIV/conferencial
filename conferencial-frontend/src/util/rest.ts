@@ -1,6 +1,6 @@
 const BASE_URL = 'http://localhost:8080';
 
-async function handleResponse(response: Response): Promise<Response> {
+async function handleResponse<T=unknown>(response: Response): Promise<T> {
   if (!response.ok) {
     const error = await response.text();
     throw new Error(error || 'Unknown error occurred');
@@ -27,14 +27,14 @@ export async function postRequest(url: string, data: unknown, options?: RequestI
   return await handleResponse(response);
 }
 
-export async function patchRequest(url: string, data: unknown, options?: RequestInit): Promise<Response> {
+export async function patchRequest<T= unknown>(url: string, data: unknown, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${url}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
     ...options,
   });
-  return await handleResponse(response);
+  return await handleResponse<T>(response);
 }
 
 export async function deleteRequest(url: string, options?: RequestInit): Promise<Response> {

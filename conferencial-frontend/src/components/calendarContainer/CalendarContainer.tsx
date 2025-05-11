@@ -21,7 +21,6 @@ export default function CalendarContainer() {
   }
 
   const openEditExistingConferenceForm = (conference: Conference) => {
-    console.log("TEST");
     dispatch(setSelectedConference(conference));
     dispatch(setIsConferenceEditingFormOpen(true));
   }

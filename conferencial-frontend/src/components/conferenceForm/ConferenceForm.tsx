@@ -14,6 +14,7 @@ interface Props {
 }
 
 const emptyConference: Conference = {
+  id:0,
   name:"",
   roomId:0,
   startTime:"",
@@ -22,6 +23,7 @@ const emptyConference: Conference = {
 
 export default function ConferenceForm(props: Props) {
   const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
   const isOpen = useAppSelector((state)=> state.userInterface.isConferenceFormOpen);
   const dispatch = useAppDispatch();
   const rooms = useRooms();
@@ -36,12 +38,12 @@ export default function ConferenceForm(props: Props) {
     try {
       
       await postRequest(`${urls.conferences}/`,createdConference);
-      message.success("Conference successfully created.");
+      messageApi.success("Conference successfully created.");
       await props.refreshConferences();
       setCreatedConference(emptyConference);
       dispatch(setIsConferenceFormOpen(false));
     } catch (error) {
-      message.error((error as Error).message)
+      messageApi.error((error as Error).message)
     }
     
   };
@@ -68,6 +70,7 @@ export default function ConferenceForm(props: Props) {
         onCancel={handleCancel}
         footer={(_, {CancelBtn }) => (
           <>
+          {contextHolder}
             <Form name='createConference' form={form} onFinish={handleOk}>
               <Form.Item 
                 label="Conference Name"

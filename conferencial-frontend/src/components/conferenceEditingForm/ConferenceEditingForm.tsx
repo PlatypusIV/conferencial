@@ -1,31 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useIsConferenceEditingFormOpen, useParticipants, useRooms, useSelectedConference } from '../../store/hooks';
-import { Button, Form, Input, Modal, message } from 'antd';
+import type { PopconfirmProps } from 'antd';
+import { Button, Form, Input, Modal, message, Popconfirm } from 'antd';
 import dayjs from 'dayjs';
-import './ConferenceEditingForm.css';
+import urls from "../../util/urls.json";
 import { setIsConferenceEditingFormOpen } from '../../store/userInterfaceActions';
 import { setSelectedConference } from '../../store/conferenceActions';
+import { getRequest, patchRequest } from '../../util/rest';
+import './ConferenceEditingForm.css';
+import type { Conference } from '../../util/interfaces';
+
 
 export default function ConferenceEditingForm() {
     const dispatch = useAppDispatch();
+    const [messageApi, contextHolder] = message.useMessage();
     const isConferenceEditingFormOpen = useIsConferenceEditingFormOpen();
     const selectedConference = useSelectedConference();
     const participants = useParticipants();
     const rooms = useRooms();
 
+    useEffect(()=>{
+        getConferenceData();
+    },[]);
+
+
+    async function getConferenceData(){
+        try {
+            const conferenceResponse = await getRequest(`${urls.conferences}/${selectedConference?.id}`);
+
+            dispatch(setSelectedConference(conferenceResponse));
+
+        } catch (error) {
+            messageApi.error((error as Error).message);
+        }
+    }
 
     function displayRoomInfo(){
         const selectedRoom = rooms.find(r=> r.id === selectedConference?.roomId);
         return `${selectedRoom?.name} - seats: ${selectedRoom?.maxSeats}`;
     }
 
-    function cancelConference(){
+    async function cancelConference(){
         try {
-            console.log(selectedConference);
+            const response = await patchRequest<Conference>(`${urls.conferences}/cancel/${selectedConference?.id}`, selectedConference);
 
-            closeModal();
+            dispatch(setSelectedConference(response));
+            messageApi.success(`Conference: ${response?.name} successfully ${response?.canceled? "canceled" : "reactivated"}`);
         } catch (error) {
-            console.log((error as Error).message);
+            messageApi.error((error as Error).message)
         }
     }
 
@@ -36,8 +58,9 @@ export default function ConferenceEditingForm() {
 
   return (
     <Modal open={isConferenceEditingFormOpen} onCancel={closeModal} onOk={closeModal}>
+        {contextHolder}
         <div className='conferenceEditingContainer'>
-            <Form onFinish={cancelConference}>
+            <Form>
                 <Form.Item 
                     label="Conference Name"
                     name="conferenceName"
@@ -60,11 +83,15 @@ export default function ConferenceEditingForm() {
                     label="Cancel conference"
                     name="isCanceled"
                 >
-                    <Button danger={true}> Cancel conference</Button>
+                    <Popconfirm title="Cancel conference" description="Are you sure you want to cancel the conference?" onConfirm={cancelConference} onCancel={(e)=> console.log("cancel action: " + e)}
+                    okText="Yes"
+                    cancelText="No"
+                    >
+                        <Button type={"primary"} danger={!selectedConference?.canceled} >{selectedConference?.canceled ? "Reactivate" : "Cancel"}</Button>
+                    </Popconfirm> 
                 </Form.Item>
             </Form>
         </div>
-
     </Modal>
   )
 }
