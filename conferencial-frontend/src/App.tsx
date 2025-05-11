@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import './App.css'
+import { useEffect } from 'react';
+import { ConfigProvider, theme } from 'antd';
 import Header from './components/header/Header';
 import CalendarContainer from './components/calendarContainer/CalendarContainer';
 import { getRequest } from './util/rest';
@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 import ConferenceCreationModal from './components/conferenceCreationModal/ConferenceCreationModal';
 import { setRooms } from './store/roomActions';
 import ConferenceEditingModal from './components/conferenceEditingModal/ConferenceEditingModal';
-
+import './App.css';
 
 function App() {
   const selectedMonth = useAppSelector((state)=>state.userInterface.selectedMonth);
@@ -46,10 +46,16 @@ function App() {
 
   return (
     <>
-      <Header></Header>
+        <ConfigProvider
+          theme={{
+          algorithm: theme.darkAlgorithm,
+    }}
+    >
+      <Header />
       <CalendarContainer/>
       <ConferenceCreationModal refreshConferences={refreshConferences} />
       <ConferenceEditingModal />
+  </ConfigProvider>
     </>
   )
 }

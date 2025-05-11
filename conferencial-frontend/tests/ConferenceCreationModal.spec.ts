@@ -1,7 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-
-
 test.describe('ConferenceCreationModal', () => {
 
   test.beforeEach(async ({ page }) => {
