@@ -15,6 +15,7 @@ export interface Conference {
 }
 
 export interface Participant {
+    id: number;
     conferenceId: number;
     fullName: string;
     birthDate: string;

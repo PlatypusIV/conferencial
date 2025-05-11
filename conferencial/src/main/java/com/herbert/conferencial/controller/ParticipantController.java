@@ -32,4 +32,10 @@ public class ParticipantController {
         Participant participant1 = participantService.addNewParticipant(participant);
         return new ResponseEntity<>(participant1, HttpStatus.CREATED);
     }
+
+    @DeleteMapping(path="/delete/{id}")
+    public ResponseEntity<?> deleteParticipant(@PathVariable("id") int id){
+        participantService.removeParticipantFromConference(id);
+        return new ResponseEntity<>("Deleted", HttpStatus.NO_CONTENT);
+    }
 }

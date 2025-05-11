@@ -37,6 +37,10 @@ public class ParticipantService {
         return participantRepository.save(participant);
     }
 
+    public void removeParticipantFromConference(int id) {
+        participantRepository.deleteById(id);
+    }
+
     public void validateParticipantAge(Participant participant) {
         if(!(Period.between(participant.getBirthDate(), LocalDate.now()).getYears() >= 18)){
             throw new GeneralException("Participant is not an adult");

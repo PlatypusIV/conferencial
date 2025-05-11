@@ -8,13 +8,13 @@ async function handleResponse<T=unknown>(response: Response): Promise<T> {
   return await response.json();
 }
 
-export async function getRequest(url: string, options?: RequestInit): Promise<Response> {
+export async function getRequest<T= unknown>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${url}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
-  return await handleResponse(response);
+  return await handleResponse<T>(response);
 }
 
 export async function postRequest<T = unknown>(url: string, data: unknown, options?: RequestInit): Promise<T> {
@@ -37,11 +37,11 @@ export async function patchRequest<T= unknown>(url: string, data: unknown, optio
   return await handleResponse<T>(response);
 }
 
-export async function deleteRequest(url: string, options?: RequestInit): Promise<Response> {
+export async function deleteRequest<T= unknown>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${url}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
-  return await handleResponse(response);
+  return await handleResponse<T>(response);
 }

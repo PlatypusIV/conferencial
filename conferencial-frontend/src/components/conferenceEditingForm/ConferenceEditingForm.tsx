@@ -6,15 +6,17 @@ import dayjs from 'dayjs';
 import urls from "../../util/urls.json";
 import { setIsConferenceEditingFormOpen } from '../../store/userInterfaceActions';
 import { setSelectedConference } from '../../store/conferenceActions';
-import { getRequest, patchRequest, postRequest } from '../../util/rest';
+import { deleteRequest, getRequest, patchRequest, postRequest } from '../../util/rest';
 import './ConferenceEditingForm.css';
 import type { Conference, Participant } from '../../util/interfaces';
 import { setParticipants } from '../../store/participantActions';
+import { useDebouncedCallback } from "use-debounce";
 
 const emptyParticipant = {
     fullName: "",
     conferenceId: 0,
-    birthDate: ""
+    birthDate: "",
+    id:0
 }
 
 export default function ConferenceEditingForm() {
@@ -27,28 +29,61 @@ export default function ConferenceEditingForm() {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [searchableParticipantList, setSearchableParticipantList] = useState<Participant[]>([]);
     const rooms = useRooms();
+    const debounced = useDebouncedCallback((value)=>{
+        setSearchTerm(value);
+    },1000);
 
     useEffect(()=>{
-        getConferenceData();
-    },[]);
+        if(isConferenceEditingFormOpen) {
+            getConferenceData();
+        }
+    },[isConferenceEditingFormOpen]);
+
+    useEffect(()=>{
+        if(searchTerm.length){
+            searchForParticipant();
+        }else{
+            clearSearchList()
+        }
+    },[searchTerm]);
+
+    useEffect(()=>{
+        console.log(participants.toString());
+    },[participants]);
 
     async function addNewParticipantToConference(){
         try {
             const response = await postRequest<Participant>(`${urls.participants}`, {...currentParticipant, conferenceId: selectedConference?.id});
             messageApi.success(`${response.fullName} has been added to ${selectedConference?.name}`);
+            await getParticipantData();
         } catch (error) {
             messageApi.error((error as Error).message);
         }
     }
 
-    function searchForParticipant(){
-        
+    async function removeParticipantFromConference(participant: Participant) {
+        try {
+            const response = await deleteRequest(`${urls.participants}/delete/${participant.id}`);
+            messageApi.success(`${participant.fullName} successfully removed from ${selectedConference?.name}`);
+        } catch (error) {
+            messageApi.error((error as Error).message);
+        }
+    }
+
+    function searchForParticipant() {
+        const searchedParticipants = participants.filter(p=>p.fullName.includes(searchTerm));
+        setSearchableParticipantList(searchedParticipants);
+    }
+
+    function clearSearchList(){
+        setSearchableParticipantList([]);
     }
 
     async function getConferenceData(){
         try {
+            if(!selectedConference?.id) return;
             const conferenceResponse = await getRequest(`${urls.conferences}/${selectedConference?.id}`);
-            const participantsOfConference = await getRequest(`${urls.participants}/${selectedConference?.id}`);
+            const participantsOfConference = await getRequest<Participant[]>(`${urls.participants}/${selectedConference?.id}`);
 
             dispatch(setSelectedConference(conferenceResponse));
             dispatch(setParticipants(participantsOfConference));
@@ -56,6 +91,16 @@ export default function ConferenceEditingForm() {
         } catch (error) {
             messageApi.error((error as Error).message);
         }
+    }
+
+    async function getParticipantData(){
+        try {
+            const participantsOfConference = await getRequest<Participant[]>(`${urls.participants}/${selectedConference?.id}`);
+            dispatch(setParticipants(participantsOfConference));
+        } catch (error) {
+            messageApi.error((error as Error).message);
+        }
+
     }
 
     function displayRoomInfo(){
@@ -78,12 +123,14 @@ export default function ConferenceEditingForm() {
         setCurrentParticipant(emptyParticipant);
         dispatch(setSelectedConference(undefined))
         dispatch(setIsConferenceEditingFormOpen(false));
+        dispatch(setParticipants([]));
     }
 
   return (
     <Modal open={isConferenceEditingFormOpen} onCancel={closeModal} onOk={closeModal} className='conferenceEditingModal'>
         {contextHolder}
         <div className='conferenceEditingContainer'>
+            <div className='conferenceCancellationFormContainer'>
             <Form>
                 <Form.Item 
                     label="Conference Name"
@@ -104,6 +151,12 @@ export default function ConferenceEditingForm() {
                     <Input type="text" placeholder={displayRoomInfo()}/>
                 </Form.Item>
                 <Form.Item 
+                    label="Conference status"
+                    name="status"
+                >
+                    <Input disabled={true} placeholder={selectedConference?.canceled? "CANCELED" : "ACTIVE"}/>
+                </Form.Item>
+                <Form.Item 
                     label="Cancel conference"
                     name="isCanceled"
                 >
@@ -115,7 +168,8 @@ export default function ConferenceEditingForm() {
                     </Popconfirm> 
                 </Form.Item>
             </Form>
-
+            </div>
+            <div className='participantCreationFormContainer'>
             <Form onFinish={addNewParticipantToConference}>
                 <Form.Item label="Participant full name">
                     <Input placeholder={currentParticipant?.fullName || "Insert full name"} onChange={(e)=> setCurrentParticipant({...currentParticipant, fullName:e.target.value})} value={currentParticipant?.fullName || ""}/>
@@ -127,9 +181,18 @@ export default function ConferenceEditingForm() {
                     <Button type='primary' htmlType="submit">Add to participant list</Button>
                 </Form.Item>
             </Form>
+            </div>
             <div className='participantListContainer'>
-                <Search />
-                <List />
+                <Search onChange={(e)=> debounced(e.target.value)}/>
+                <List 
+                dataSource={searchableParticipantList.length ? searchableParticipantList : participants}
+
+                renderItem={(participant)=>(
+                <List.Item id={participant.id.toString()}>
+                    <p>{participant.fullName}-{participant.birthDate}</p>
+                    <Button type='primary' danger={true} onClick={()=>removeParticipantFromConference(participant)}>Remove</Button>
+                </List.Item>)}
+                />
             </div>
         </div>
     </Modal>
