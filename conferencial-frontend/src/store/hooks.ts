@@ -10,4 +10,4 @@ export const useParticipants = () => useAppSelector((state)=> state.participant.
 export const useRooms = () => useAppSelector((state)=> state.room.rooms);
 export const useSelectedDate = () => useAppSelector((state)=> state.userInterface.selectedDate);
 export const useSelectedMonth = () => useAppSelector((state)=> state.userInterface.selectedMonth);
-export const useIsConferenceEditingFormOpen = () => useAppSelector((state)=> state.userInterface.isConferenceEditingFormOpen);
+export const useisConferenceEditingModalOpen = () => useAppSelector((state)=> state.userInterface.isConferenceEditingModalOpen);

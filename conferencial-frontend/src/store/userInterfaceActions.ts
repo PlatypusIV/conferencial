@@ -1,15 +1,15 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 interface InitialState {
-    isConferenceFormOpen: boolean;
-    isConferenceEditingFormOpen: boolean;
+    isConferenceCreationModalOpen: boolean;
+    isConferenceEditingModalOpen: boolean;
     selectedDate?: string;
     selectedMonth?: number;
 }
 
 const initialState: InitialState = {
-    isConferenceFormOpen: false,
-    isConferenceEditingFormOpen: false,
+    isConferenceCreationModalOpen: false,
+    isConferenceEditingModalOpen: false,
     selectedDate: undefined,
     selectedMonth: undefined,
 }
@@ -18,11 +18,11 @@ const userInterfaceSlice = createSlice({
     name:'userInterface',
     initialState,
     reducers:{
-        setIsConferenceFormOpen: (state, action) => {
-            state.isConferenceFormOpen = action.payload;
+        setIsConferenceCreationModalOpen: (state, action) => {
+            state.isConferenceCreationModalOpen = action.payload;
         },
-        setIsConferenceEditingFormOpen: (state, action) => {
-            state.isConferenceEditingFormOpen = action.payload;
+        setIsConferenceEditingModalOpen: (state, action) => {
+            state.isConferenceEditingModalOpen = action.payload;
         },
         setSelectedDate: (state, action) => {
             state.selectedDate = action.payload;
@@ -33,5 +33,5 @@ const userInterfaceSlice = createSlice({
     }
 });
 
-export const {setIsConferenceFormOpen, setSelectedDate, setSelectedMonth, setIsConferenceEditingFormOpen} = userInterfaceSlice.actions;
+export const {setIsConferenceCreationModalOpen, setSelectedDate, setSelectedMonth, setIsConferenceEditingModalOpen} = userInterfaceSlice.actions;
 export default userInterfaceSlice.reducer;

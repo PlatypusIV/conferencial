@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useIsConferenceEditingFormOpen, useParticipants, useRooms, useSelectedConference } from '../../store/hooks';
+import { useAppDispatch, useisConferenceEditingModalOpen, useParticipants, useRooms, useSelectedConference } from '../../store/hooks';
 import { Button, Form, Input, Modal, message, Popconfirm, DatePicker, List } from 'antd';
 import Search from 'antd/es/input/Search';
 import dayjs from 'dayjs';
 import urls from "../../util/urls.json";
-import { setIsConferenceEditingFormOpen } from '../../store/userInterfaceActions';
+import { setIsConferenceEditingModalOpen } from '../../store/userInterfaceActions';
 import { setSelectedConference } from '../../store/conferenceActions';
 import { deleteRequest, getRequest, patchRequest, postRequest } from '../../util/rest';
-import './ConferenceEditingForm.css';
+import './ConferenceEditingModal.css';
 import type { Conference, Participant } from '../../util/interfaces';
 import { setParticipants } from '../../store/participantActions';
 import { useDebouncedCallback } from "use-debounce";
@@ -19,11 +19,11 @@ const emptyParticipant = {
     id:0
 }
 
-export default function ConferenceEditingForm() {
+export default function ConferenceEditingModal() {
     const dispatch = useAppDispatch();
     const [messageApi, contextHolder] = message.useMessage();
     const [currentParticipant, setCurrentParticipant] = useState<Participant>(emptyParticipant);
-    const isConferenceEditingFormOpen = useIsConferenceEditingFormOpen();
+    const isConferenceEditingModalOpen = useisConferenceEditingModalOpen();
     const selectedConference = useSelectedConference();
     const participants = useParticipants();
     const [searchTerm, setSearchTerm] = useState<string>("");
@@ -34,10 +34,11 @@ export default function ConferenceEditingForm() {
     },1000);
 
     useEffect(()=>{
-        if(isConferenceEditingFormOpen) {
+        if(isConferenceEditingModalOpen) {
             getConferenceData();
         }
-    },[isConferenceEditingFormOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[isConferenceEditingModalOpen]);
 
     useEffect(()=>{
         if(searchTerm.length){
@@ -45,11 +46,8 @@ export default function ConferenceEditingForm() {
         }else{
             clearSearchList()
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[searchTerm]);
-
-    useEffect(()=>{
-        console.log(participants.toString());
-    },[participants]);
 
     async function addNewParticipantToConference(){
         try {
@@ -63,7 +61,8 @@ export default function ConferenceEditingForm() {
 
     async function removeParticipantFromConference(participant: Participant) {
         try {
-            const response = await deleteRequest(`${urls.participants}/delete/${participant.id}`);
+            await deleteRequest(`${urls.participants}/delete/${participant.id}`);
+            await getParticipantData();
             messageApi.success(`${participant.fullName} successfully removed from ${selectedConference?.name}`);
         } catch (error) {
             messageApi.error((error as Error).message);
@@ -122,12 +121,12 @@ export default function ConferenceEditingForm() {
     function closeModal() {
         setCurrentParticipant(emptyParticipant);
         dispatch(setSelectedConference(undefined))
-        dispatch(setIsConferenceEditingFormOpen(false));
+        dispatch(setIsConferenceEditingModalOpen(false));
         dispatch(setParticipants([]));
     }
 
   return (
-    <Modal open={isConferenceEditingFormOpen} onCancel={closeModal} onOk={closeModal} className='conferenceEditingModal'>
+    <Modal open={isConferenceEditingModalOpen} onCancel={closeModal} onOk={closeModal} className='conferenceEditingModal'>
         {contextHolder}
         <div className='conferenceEditingContainer'>
             <div className='conferenceCancellationFormContainer'>

@@ -7,9 +7,9 @@ import { setConferences } from './store/conferenceActions';
 import urls from "./util/urls.json";
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import dayjs from 'dayjs';
-import ConferenceForm from './components/conferenceForm/ConferenceForm';
+import ConferenceForm from './components/conferenceCreationModal/ConferenceCreationModal';
 import { setRooms } from './store/roomActions';
-import ConferenceEditingForm from './components/conferenceEditingForm/ConferenceEditingForm';
+import ConferenceEditingForm from './components/conferenceEditingModal/ConferenceEditingModal';
 
 
 function App() {

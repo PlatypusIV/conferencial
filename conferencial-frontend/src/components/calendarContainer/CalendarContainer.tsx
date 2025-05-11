@@ -5,7 +5,7 @@ import type { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import dayjs from 'dayjs';
 import './CalendarContainer.css';
-import { setIsConferenceEditingFormOpen, setIsConferenceFormOpen,setSelectedDate, setSelectedMonth } from '../../store/userInterfaceActions';
+import { setIsConferenceEditingModalOpen, setIsConferenceCreationModalOpen,setSelectedDate, setSelectedMonth } from '../../store/userInterfaceActions';
 import type { Conference } from '../../util/interfaces';
 import { setSelectedConference } from '../../store/conferenceActions';
 
@@ -17,12 +17,12 @@ export default function CalendarContainer() {
 
   const openConferenceForm = (date: Dayjs) => {
     dispatch(setSelectedDate(date));
-    dispatch(setIsConferenceFormOpen(true));
+    dispatch(setIsConferenceCreationModalOpen(true));
   }
 
   const openEditExistingConferenceForm = (conference: Conference) => {
     dispatch(setSelectedConference(conference));
-    dispatch(setIsConferenceEditingFormOpen(true));
+    dispatch(setIsConferenceEditingModalOpen(true));
   }
 
   const onPanelChange= (value: Dayjs) => {
@@ -55,7 +55,6 @@ export default function CalendarContainer() {
 
   return (
     <div className='calendarContainerContainer'>
-      {/* onSelect={(date)=>openConferenceForm(date)} */}
       <Calendar 
       className='calendarMain'
       onPanelChange={onPanelChange}

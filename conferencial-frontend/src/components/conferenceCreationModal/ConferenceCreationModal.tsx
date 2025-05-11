@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Form, Input, TimePicker, Select, Button, message, Space } from 'antd';
 import { useAppDispatch, useAppSelector, useRooms, useSelectedDate } from '../../store/hooks';
-import { setIsConferenceFormOpen } from '../../store/userInterfaceActions';
+import { setIsConferenceCreationModalOpen } from '../../store/userInterfaceActions';
 import type { Conference } from '../../util/interfaces';
 import { postRequest } from '../../util/rest';
 import urls from "../../util/urls.json";
@@ -21,10 +21,10 @@ const emptyConference: Conference = {
   endTime: ""
 }
 
-export default function ConferenceForm(props: Props) {
+export default function ConferenceCreationModal(props: Props) {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
-  const isOpen = useAppSelector((state)=> state.userInterface.isConferenceFormOpen);
+  const isOpen = useAppSelector((state)=> state.userInterface.isConferenceCreationModalOpen);
   const dispatch = useAppDispatch();
   const rooms = useRooms();
   const selectedDate = useSelectedDate();
@@ -41,7 +41,7 @@ export default function ConferenceForm(props: Props) {
       messageApi.success("Conference successfully created.");
       await props.refreshConferences();
       setCreatedConference(emptyConference);
-      dispatch(setIsConferenceFormOpen(false));
+      dispatch(setIsConferenceCreationModalOpen(false));
     } catch (error) {
       messageApi.error((error as Error).message)
     }
@@ -49,7 +49,7 @@ export default function ConferenceForm(props: Props) {
   };
 
   const handleCancel = () => {
-    dispatch(setIsConferenceFormOpen(false));
+    dispatch(setIsConferenceCreationModalOpen(false));
     setCreatedConference(emptyConference);
   }
 
@@ -64,6 +64,7 @@ export default function ConferenceForm(props: Props) {
 
   return (
     <Modal
+        className='conferenceCreationModal'
         title="Create conference"
         open={isOpen}
         onOk={handleOk}
