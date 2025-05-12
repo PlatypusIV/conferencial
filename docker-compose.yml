@@ -1,7 +1,6 @@
-version: '3.9'
+version: "3.9"
 
 services:
-
   db:
     image: postgres
     restart: always
@@ -14,7 +13,7 @@ services:
       - "5432:5432"
 
   conferencial:
-    image: conferencial:latest
+    image: kenymera/conferencial:latest
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/conference_db
