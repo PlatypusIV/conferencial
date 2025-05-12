@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useisConferenceEditingModalOpen, useParticipants, useRooms, useSelectedConference } from '../../store/hooks';
 import { Button, Form, Input, Modal, message, Popconfirm, DatePicker, List } from 'antd';
 import Search from 'antd/es/input/Search';

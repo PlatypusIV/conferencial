@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Form, Input, TimePicker, Select, Button, message, Space } from 'antd';
 import { useAppDispatch, useAppSelector, useRooms, useSelectedDate } from '../../store/hooks';
 import { setIsConferenceCreationModalOpen } from '../../store/userInterfaceActions';

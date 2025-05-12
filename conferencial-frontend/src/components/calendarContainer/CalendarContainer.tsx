@@ -1,4 +1,3 @@
-import React from 'react';
 import type { CalendarProps } from 'antd';
 import { Button, Calendar } from 'antd';
 import type { Dayjs } from 'dayjs';
