@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: temporary
+      POSTGRES_DB: conference_db
+    ports:
+      - "5432:5432"
+
+  conferencial:
+    image: conferencial:latest
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/conference_db
+      SPRING_FLYWAY_URL: jdbc:postgresql://host.docker.internal:5432/conference_db
+    ports:
+      - "8080:8080"
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: AdminPassword
+    ports:
+      - "9889:80"
