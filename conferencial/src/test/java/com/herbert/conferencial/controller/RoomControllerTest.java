@@ -43,7 +43,7 @@ public class RoomControllerTest {
 
         when(roomService.addNewRoom(any(Room.class))).thenReturn(room);
 
-        mockMvc.perform(post("/rooms/")
+        mockMvc.perform(post("/rooms")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(room)))
                 .andExpect(status().isOk())
@@ -70,7 +70,7 @@ public class RoomControllerTest {
 
         when(roomService.getRooms()).thenReturn(List.of(testRoom));
 
-        mockMvc.perform(get("/rooms/"))
+        mockMvc.perform(get("/rooms"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(testRoom.getName()));
     }

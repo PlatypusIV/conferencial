@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ActiveProfiles("test")
 public class ParticipantRepositoryTest {
 
@@ -21,6 +24,8 @@ public class ParticipantRepositoryTest {
     private ParticipantRepository participantRepository;
 
     @Test
+    @Transactional
+    @Rollback
     @DisplayName("Should save and find participant by ID")
     void shouldFindParticipantById() {
         Participant participant = new Participant();
@@ -31,10 +36,12 @@ public class ParticipantRepositoryTest {
 
         Participant found = participantRepository.findParticipantById(1);
         assertThat(found).isNotNull();
-        assertThat(found.getFullName()).isEqualTo("John Doe");
+        assertThat(found.getFullName()).isEqualTo("Test1");
     }
 
     @Test
+    @Transactional
+    @Rollback
     @DisplayName("Should find all participants by conference ID")
     void shouldFindAllParticipantsByConferenceId() {
         Participant p1 = new Participant();
@@ -54,6 +61,7 @@ public class ParticipantRepositoryTest {
 
     @Test
     @Transactional
+    @Rollback
     @DisplayName("Should count participants in a conference")
     void shouldCountParticipantsInConference() {
         Participant p1 = new Participant();

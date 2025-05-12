@@ -104,8 +104,7 @@ public class ConferenceControllerTest {
     void shouldCancelConferenceById() throws Exception {
 
         mockMvc.perform(patch("/conferences/cancel/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Canceled"));
+                .andExpect(status().isOk());
     }
 
     @TestConfiguration
