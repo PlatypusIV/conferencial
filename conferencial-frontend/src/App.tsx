@@ -46,16 +46,25 @@ function App() {
 
   return (
     <>
-        <ConfigProvider
+      <ConfigProvider
           theme={{
           algorithm: theme.darkAlgorithm,
-    }}
-    >
-      <Header />
-      <CalendarContainer/>
-      <ConferenceCreationModal refreshConferences={refreshConferences} />
-      <ConferenceEditingModal />
-  </ConfigProvider>
+          components: {
+            Modal: {
+              colorBgBase: '#141414'
+            },
+
+    },
+      }}>
+        <div className='headerContainer'>
+          <Header />
+        </div>
+        <div className='calendarContainer'>
+          <CalendarContainer/>
+        </div>
+        <ConferenceCreationModal refreshConferences={refreshConferences} />
+        <ConferenceEditingModal />
+      </ConfigProvider>
     </>
   )
 }

@@ -20,6 +20,7 @@ const emptyParticipant = {
 }
 
 export default function ConferenceEditingModal() {
+    const [form] = Form.useForm();
     const dispatch = useAppDispatch();
     const [messageApi, contextHolder] = message.useMessage();
     const [currentParticipant, setCurrentParticipant] = useState<Participant>(emptyParticipant);
@@ -86,7 +87,6 @@ export default function ConferenceEditingModal() {
 
             dispatch(setSelectedConference(conferenceResponse));
             dispatch(setParticipants(participantsOfConference));
-
         } catch (error) {
             messageApi.error((error as Error).message);
         }
@@ -99,7 +99,6 @@ export default function ConferenceEditingModal() {
         } catch (error) {
             messageApi.error((error as Error).message);
         }
-
     }
 
     function displayRoomInfo(){
@@ -147,7 +146,7 @@ export default function ConferenceEditingModal() {
                     label="Room"
                     name="room"
                 >
-                    <Input type="text" placeholder={displayRoomInfo()}/>
+                    <Input type="text" placeholder={displayRoomInfo()} disabled={true}/>
                 </Form.Item>
                 <Form.Item 
                     label="Conference status"
@@ -159,7 +158,7 @@ export default function ConferenceEditingModal() {
                     label="Cancel conference"
                     name="isCanceled"
                 >
-                    <Popconfirm title="Cancel conference" description="Are you sure you want to cancel the conference?" onConfirm={cancelConference} onCancel={(e)=> console.log("cancel action: " + e)}
+                    <Popconfirm title="Cancel conference" description="Are you sure you want to cancel the conference?" onConfirm={cancelConference}
                     okText="Yes"
                     cancelText="No"
                     >
@@ -169,12 +168,16 @@ export default function ConferenceEditingModal() {
             </Form>
             </div>
             <div className='participantCreationFormContainer'>
-            <Form onFinish={addNewParticipantToConference}>
-                <Form.Item label="Participant full name">
-                    <Input placeholder={currentParticipant?.fullName || "Insert full name"} onChange={(e)=> setCurrentParticipant({...currentParticipant, fullName:e.target.value})} value={currentParticipant?.fullName || ""}/>
+            <Form onFinish={addNewParticipantToConference} form={form}>
+                <Form.Item label="Participant full name" name="fullName"
+                rules={[{required: true, message: "Please input participant name", max:150}]}>
+                    <Input placeholder={currentParticipant?.fullName || "Insert full name"} onChange={(e)=> setCurrentParticipant({...currentParticipant, fullName:e.target.value})}/>
                 </Form.Item>
-                <Form.Item label="Birthdate">
-                    <DatePicker value={currentParticipant.birthDate ? dayjs(currentParticipant.birthDate) : dayjs()} onChange={(value)=>setCurrentParticipant({...currentParticipant, birthDate: value.format("YYYY-MM-DD").toString()})}/>
+                <Form.Item 
+                label="Birthdate"
+                name="birthDate" 
+                rules={[{required: true, message: "Please input valid birthdate"}]}>
+                    <DatePicker value={currentParticipant.birthDate ? dayjs(currentParticipant.birthDate) : dayjs()} onChange={(value)=>setCurrentParticipant({...currentParticipant, birthDate: value.format("YYYY-MM-DD").toString()})} />
                 </Form.Item>
                 <Form.Item>
                     <Button type='primary' htmlType="submit">Add to participant list</Button>
@@ -182,10 +185,11 @@ export default function ConferenceEditingModal() {
             </Form>
             </div>
             <div className='participantListContainer'>
-                <Search onChange={(e)=> debounced(e.target.value)}/>
+                <Search onChange={(e)=> debounced(e.target.value)} className='participantListSearchInput' placeholder='Search for participant by name'/>
                 <List 
+                size='small'
                 dataSource={searchableParticipantList.length ? searchableParticipantList : participants}
-
+                className='participantList'
                 renderItem={(participant)=>(
                 <List.Item id={participant.id.toString()}>
                     <p>{participant.fullName}-{participant.birthDate}</p>

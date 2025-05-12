@@ -1,7 +1,9 @@
-#root {
-  width: 100vw;
-  height: 100vh;
-  margin: 0 auto;
-  text-align: center;
+.headerContainer {
+  top: 0;
+  height: 10%;
 }
 
+.calendarContainer {
+  height: 90%;
+  bottom: 0;
+}

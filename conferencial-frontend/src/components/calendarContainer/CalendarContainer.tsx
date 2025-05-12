@@ -35,15 +35,17 @@ export default function CalendarContainer() {
 
     return (
       <div className='calendarCellContainer'>
-        <Button onClick={()=>openConferenceForm(value)} className='addConferenceButton' type='primary'>+</Button>
-      <ul className="conferenceCalenderEventList" >
-        {sortedConferencesForTheDay.map((conference) => (
-          <li key={conference.id} onClick={()=> openEditExistingConferenceForm(conference)}>
-            <div className='calendarConferenceSelectionContainer'>{conference.name} : {dayjs(conference.startTime).format("HH:mm")} - {dayjs(conference.endTime).format("HH:mm")}</div>
-            <br/>
-          </li>
-        ))}
-      </ul>
+        <Button onClick={()=>openConferenceForm(value)} className='addConferenceButton' type='primary' size='small' shape='circle' >+</Button>
+      <div className="calendarConferenceListContainer">
+        <ul className="conferenceCalenderEventList" >
+          {sortedConferencesForTheDay.map((conference) => (
+            <li key={conference.id} onClick={()=> openEditExistingConferenceForm(conference)} >
+              <div className={conference.canceled? 'canceledConferenceElement' : 'conferenceElement'}>{conference.name} : {dayjs(conference.startTime).format("HH:mm")} - {dayjs(conference.endTime).format("HH:mm")}</div>
+              <br/>
+            </li>
+          ))}
+        </ul>
+      </div>
       </div>
     );
   };
@@ -54,7 +56,7 @@ export default function CalendarContainer() {
   };
 
   return (
-    <div className='calendarContainerContainer'>
+    <div className='calendarContainer'>
       <Calendar 
       className='calendarMain'
       onPanelChange={onPanelChange}

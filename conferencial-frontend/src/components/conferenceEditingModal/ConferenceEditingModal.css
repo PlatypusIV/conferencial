@@ -1,33 +1,45 @@
 .conferenceEditingModal {
-    min-width: 1280px;
-    min-height: 640px;
+  min-width: 1280px;
+  min-height: 640px;
 }
 
 .conferenceEditingContainer {
-    width:100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 20px;
-    margin: 4px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px;
+  margin: 8px;
 }
 
 .conferenceCancellationFormContainer {
-    width:33%;
-    margin: 4px;
-    
+  width: 33%;
+  margin: 4px;
+  padding: 2px;
 }
 
 .participantCreationFormContainer {
-    width:33%;
-    margin: 4px;
-
+  width: 33%;
+  margin: 4px;
+  padding: 2px;
 }
 
 .participantListContainer {
-    width: 33%;
-    height: 100%;
-    margin: 4px;
+  width: 33%;
+  max-height: 300px;
+  margin: 4px;
+  padding: 2px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
 
+.participantListSearchInput {
+  top: 0;
+  z-index: 2;
+  position: sticky;
+}
+
+.participantList {
+  z-index: 1;
 }

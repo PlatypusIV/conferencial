@@ -45,12 +45,11 @@ export default function ConferenceCreationModal(props: Props) {
     } catch (error) {
       messageApi.error((error as Error).message)
     }
-    
   };
 
   const handleCancel = () => {
-    dispatch(setIsConferenceCreationModalOpen(false));
     setCreatedConference(emptyConference);
+    dispatch(setIsConferenceCreationModalOpen(false));
   }
 
   function createDateTime(start?: string, end?: string) {
@@ -64,6 +63,9 @@ export default function ConferenceCreationModal(props: Props) {
 
   return (
     <Modal
+        styles={{
+        body: { backgroundColor: '#141414' },
+    }}
         className='conferenceCreationModal'
         title="Create conference"
         open={isOpen}
@@ -72,13 +74,13 @@ export default function ConferenceCreationModal(props: Props) {
         footer={(_, {CancelBtn }) => (
           <>
           {contextHolder}
-            <Form name='createConference' form={form} onFinish={handleOk}>
+            <Form name='createConference' form={form} onFinish={handleOk} >
               <Form.Item 
                 label="Conference Name"
                 name="conferenceName"
                 rules={[{required: true, message: "Please input conference name", max:150}]}
                >
-                <Input placeholder='Example conference' onChange={(newValue)=> setCreatedConference({...createdConference, name:newValue.target.value})}/>
+                <Input placeholder='Example conference' onChange={(newValue)=> setCreatedConference({...createdConference, name:newValue.target.value})} value={createdConference?.name}/>
                </Form.Item>
 
               <Form.Item 
