@@ -13,7 +13,7 @@ services:
       - "5432:5432"
 
   conferencial:
-    image: kenymera/conferencial:latest
+    image: kenymera/conferencial-app:latest
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/conference_db
