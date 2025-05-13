@@ -1,27 +1,32 @@
 package com.herbert.conferencial.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Getter
 @Entity(name= "Participant")
 @Table(name = "participant")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Participant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
+    private int id;
 
-    @Getter @Setter
+    @Setter
     @Column(name = "full_name")
     private String fullName;
 
-    @Getter @Setter
+    @Setter
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Getter @Setter
+    @Setter
     @Column(name = "conference_id")
     private int conferenceId;
 }
