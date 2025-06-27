@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useisConferenceEditingModalOpen, useParticipants, useRooms, useSelectedConference } from '../../store/hooks';
+import { useAppDispatch, useIsConferenceEditingModalOpen, useParticipants, useRooms, useSelectedConference } from '../../store/hooks';
 import { Button, Form, Input, Modal, message, Popconfirm, DatePicker, List } from 'antd';
 import Search from 'antd/es/input/Search';
 import dayjs from 'dayjs';
@@ -24,7 +24,7 @@ export default function ConferenceEditingModal() {
     const dispatch = useAppDispatch();
     const [messageApi, contextHolder] = message.useMessage();
     const [currentParticipant, setCurrentParticipant] = useState<Participant>(emptyParticipant);
-    const isConferenceEditingModalOpen = useisConferenceEditingModalOpen();
+    const isConferenceEditingModalOpen = useIsConferenceEditingModalOpen();
     const selectedConference = useSelectedConference();
     const participants = useParticipants();
     const [searchTerm, setSearchTerm] = useState<string>("");

@@ -1,25 +1,20 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('CalendarContainer', () => {
+//TODO: re write all tests
+test.describe("CalendarContainer", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto("http://localhost:5173");
   });
-
-  test('should render the calendar component', async ({ page }) => {
-    const calendar = await page.locator('.calendarMain');
+  test("should render the calendar component", async ({ page }) => {
+    const calendar = await page.locator(".calendarMain");
     await expect(calendar).toBeVisible();
   });
-
-  test('should display "+" button on a calendar day', async ({ page }) => {
-    const addButton = page.locator('.addConferenceButton').first();
-    await expect(addButton).toBeVisible();
-  });
-
-  test('should open creation modal on "+" button click', async ({ page }) => {
-    const addButton = page.locator('.addConferenceButton').first();
+  test("should open creation modal upon clicking a calendar cell", async ({
+    page,
+  }) => {
+    const addButton = page.locator(".calendarConferenceListContainer").first();
     await addButton.click();
-
-    const creationModal = page.locator('.conferenceCreationModal');
+    const creationModal = page.locator(".conferenceCreationModal");
     await expect(creationModal).toBeVisible();
   });
 });

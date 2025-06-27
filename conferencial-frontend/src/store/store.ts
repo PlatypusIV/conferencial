@@ -13,7 +13,7 @@ const store = configureStore({
         userInterface: userInterfaceReducer,
         room: roomReducer,
     },
-    middleware: (getDefaultMiddleWare) => getDefaultMiddleWare().prepend(listenerMiddleware.middleware)
+    // middleware: (getDefaultMiddleWare) => getDefaultMiddleWare().prepend(listenerMiddleware.middleware)
 });
 
 export type RootState = ReturnType<typeof store.getState>

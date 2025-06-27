@@ -5,7 +5,7 @@ import CalendarContainer from './components/calendarContainer/CalendarContainer'
 import { getRequest } from './util/rest';
 import { setConferences } from './store/conferenceActions';
 import urls from "./util/urls.json";
-import { useAppDispatch, useAppSelector } from './store/hooks';
+import { useAppDispatch, useSelectedMonth } from './store/hooks';
 import dayjs from 'dayjs';
 import ConferenceCreationModal from './components/conferenceCreationModal/ConferenceCreationModal';
 import { setRooms } from './store/roomActions';
@@ -13,7 +13,7 @@ import ConferenceEditingModal from './components/conferenceEditingModal/Conferen
 import './App.css';
 
 function App() {
-  const selectedMonth = useAppSelector((state)=>state.userInterface.selectedMonth);
+  const selectedMonth = useSelectedMonth();
   const dispatch = useAppDispatch();
 
   useEffect(()=>{
@@ -59,7 +59,7 @@ function App() {
         <div className='headerContainer'>
           <Header />
         </div>
-        <div className='calendarContainer'>
+        <div className='content'>
           <CalendarContainer/>
         </div>
         <ConferenceCreationModal refreshConferences={refreshConferences} />
