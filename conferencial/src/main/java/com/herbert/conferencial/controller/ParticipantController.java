@@ -25,7 +25,7 @@ public class ParticipantController {
     @GetMapping(path = "/{conferenceId}")
     public ResponseEntity<List<Participant>> getParticipantsForConference(@PathVariable("conferenceId") int conferenceId) {
         List<Participant> conferenceParticipants = participantService.getParticipantsRelatedToConference(conferenceId);
-        return ResponseEntity.ok(conferenceParticipants);
+        return new ResponseEntity<>(conferenceParticipants, HttpStatus.OK);
     }
 
     @PostMapping
@@ -37,8 +37,6 @@ public class ParticipantController {
     @DeleteMapping(path="/delete/{id}")
     public ResponseEntity<?> deleteParticipant(@PathVariable("id") int id){
         participantService.removeParticipantFromConference(id);
-
-        Map<String, String> response = Map.of("message", "Participant removed from successfully");
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>("Participant removed from successfully", HttpStatus.NO_CONTENT);
     }
 }

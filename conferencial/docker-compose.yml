@@ -1,7 +1,6 @@
-version: '3.9'
+version: "3.9"
 name: conferencial_resources
 services:
-
   db:
     image: postgres
     restart: always
@@ -12,22 +11,31 @@ services:
       POSTGRES_DB: conference_db
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d myapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
-#  conferencial:
-#    image: kenymera/conferencial:latest
-#    restart: always
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/conference_db
-#      SPRING_FLYWAY_URL: jdbc:postgresql://host.docker.internal:5432/conference_db
-#    ports:
-#      - "8080:8080"
+  conferencial:
+    build: ./conferencial
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/conference_db
+      SPRING_FLYWAY_URL: jdbc:postgresql://host.docker.internal:5432/conference_db
+    ports:
+      - "8080:8080"
 
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com\
       PGADMIN_DEFAULT_PASSWORD: AdminPassword
     ports:
       - "9889:80"
